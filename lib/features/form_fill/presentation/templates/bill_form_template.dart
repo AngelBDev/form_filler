@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/core/presentation/atoms/accent_button.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/bill_form.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/image_picker_display.dart';
+import 'package:form_filler/features/form_fill/state/cubit/bill_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BillFormTemplate extends StatefulWidget {
@@ -106,43 +108,72 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
     BuildContext context,
   ) {
     final paddingTop = MediaQuery.of(context).padding.top;
-    return SingleChildScrollView(
-      child: (Padding(
-        padding: EdgeInsets.only(
-          top: paddingTop,
-        ),
-        child: Column(
-          children: [
-            ImagePickerDisplay(
-              image: _image,
-              controls: _buildImagePickerDisplayControls(context),
-              onGalleryPressed: () => _getImage(
-                ImageSource.gallery,
-              ),
+    return Builder(
+      builder: (context) => BlocListener<BillCubit, BillState>(
+        listener: _listener,
+        child: SingleChildScrollView(
+          child: (Padding(
+            padding: EdgeInsets.only(
+              top: paddingTop,
             ),
-            SizedBox(height: 30),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: BillForm(
-                bill: widget.bill,
-                rncController: widget.rncController,
-                ncfController: widget.ncfController,
-                grossTotalController: widget.grossTotalController,
-                itbisController: widget.itbisController,
-                date: widget.bill?.date,
-                transactionType: widget.bill?.transactionType,
-                paymentType: widget.bill?.paymentType,
-                onChangePaymentType: widget.onChangePaymentType,
-                onTapPaymentType: widget.onTapPaymentType,
-                onChangeTransactionType: widget.onChangeTransactionType,
-                onTapTransactionType: widget.onTapTransactionType,
-                onChangeDate: widget.onChangeDate,
-              ),
+            child: Column(
+              children: [
+                ImagePickerDisplay(
+                  image: _image,
+                  controls: _buildImagePickerDisplayControls(context),
+                  onGalleryPressed: () => _getImage(
+                    ImageSource.gallery,
+                  ),
+                ),
+                SizedBox(height: 30),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: BillForm(
+                    bill: widget.bill,
+                    rncController: widget.rncController,
+                    ncfController: widget.ncfController,
+                    grossTotalController: widget.grossTotalController,
+                    itbisController: widget.itbisController,
+                    date: widget.bill?.date,
+                    transactionType: widget.bill?.transactionType,
+                    paymentType: widget.bill?.paymentType,
+                    onChangePaymentType: widget.onChangePaymentType,
+                    onTapPaymentType: widget.onTapPaymentType,
+                    onChangeTransactionType: widget.onChangeTransactionType,
+                    onTapTransactionType: widget.onTapTransactionType,
+                    onChangeDate: widget.onChangeDate,
+                  ),
+                ),
+              ],
             ),
-          ],
+          )),
         ),
-      )),
+      ),
     );
+  }
+
+  void _listener(BuildContext context, BillState state) {
+    BillInitial _state = state;
+
+    _listenToEmptyImageError(context, _state);
+  }
+
+  void _listenToEmptyImageError(
+    context,
+    BillInitial state,
+  ) {
+    if (state.errors == BillErrors.null_image) {
+      _showSnackBar(context, 'No has seleccionado ninguna image', true);
+    }
+  }
+
+  void _showSnackBar(context, String message, [bool isError = false]) {
+    final color = isError ? Theme.of(context).errorColor : Colors.green;
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: color,
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   List<Widget> _buildImagePickerDisplayControls(BuildContext context) {
