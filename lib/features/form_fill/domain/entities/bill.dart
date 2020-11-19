@@ -10,6 +10,7 @@ class Bill extends Equatable {
     this.ncf,
     this.date,
   });
+
   final String ncf;
   final String rnc;
   final DateTime date;
@@ -17,7 +18,6 @@ class Bill extends Equatable {
   final num itbis;
   final int transactionType;
   final int paymentType;
-
   @override
   List<Object> get props => [
         ncf,
@@ -28,6 +28,19 @@ class Bill extends Equatable {
         transactionType,
         paymentType,
       ];
+
+  Bill.fromMap(Map<String, dynamic> map)
+      : date = (map['fecha'] as List<String>)
+            .map(
+              (rawDate) => DateTime.parse(rawDate),
+            )
+            .toList()[0],
+        grossTotal = map['totales'],
+        itbis = map['totales'],
+        ncf = map['NCF'],
+        rnc = map['RNC'],
+        paymentType = null,
+        transactionType = null;
 
   Bill copyWith({
     String ncf,

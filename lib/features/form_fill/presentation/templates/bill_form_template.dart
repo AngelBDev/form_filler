@@ -17,9 +17,6 @@ class BillFormTemplate extends StatefulWidget {
     @required this.ncfController,
     @required this.grossTotalController,
     @required this.itbisController,
-    @required this.transactionType,
-    @required this.paymentType,
-    @required this.date,
     @required this.onChangePaymentType,
     @required this.onTapTransactionType,
     @required this.onTapPaymentType,
@@ -35,9 +32,6 @@ class BillFormTemplate extends StatefulWidget {
   final TextEditingController ncfController;
   final TextEditingController grossTotalController;
   final TextEditingController itbisController;
-  final int transactionType;
-  final int paymentType;
-  final DateTime date;
   final void Function(int value) onChangePaymentType;
   final void Function() onTapPaymentType;
   final void Function(int value) onChangeTransactionType;
@@ -79,13 +73,7 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final isFormFilled = widget.rncController.text.trim().isNotEmpty &&
-        widget.ncfController.text.trim().isNotEmpty &&
-        widget.grossTotalController.text.trim().isNotEmpty &&
-        widget.itbisController.text.trim().isNotEmpty &&
-        (widget.transactionType ?? 0) > 0 &&
-        (widget.paymentType ?? 0) > 0 &&
-        widget.date.toString().isNotEmpty;
+    final isFormFilled = _validateForm();
 
     return AppBar(
       title: Text('Formulario de factura'),
@@ -101,6 +89,17 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
           ),
       ],
     );
+  }
+
+  bool _validateForm() {
+    final isFormFilled = widget.rncController.text.trim().isNotEmpty &&
+        widget.ncfController.text.trim().isNotEmpty &&
+        widget.grossTotalController.text.trim().isNotEmpty &&
+        widget.itbisController.text.trim().isNotEmpty &&
+        (widget.bill?.transactionType ?? 0) > 0 &&
+        (widget.bill?.paymentType ?? 0) > 0 &&
+        (widget.bill?.date?.toString()?.isNotEmpty ?? false);
+    return isFormFilled;
   }
 
   Widget _buildBody(
@@ -130,9 +129,9 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
                 ncfController: widget.ncfController,
                 grossTotalController: widget.grossTotalController,
                 itbisController: widget.itbisController,
-                date: widget.date,
-                transactionType: widget.transactionType,
-                paymentType: widget.paymentType,
+                date: widget.bill?.date,
+                transactionType: widget.bill?.transactionType,
+                paymentType: widget.bill?.paymentType,
                 onChangePaymentType: widget.onChangePaymentType,
                 onTapPaymentType: widget.onTapPaymentType,
                 onChangeTransactionType: widget.onChangeTransactionType,
