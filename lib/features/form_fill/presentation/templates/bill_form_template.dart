@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/core/presentation/atoms/accent_button.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
+import 'package:form_filler/features/camera/presentation/molecules/image_picker_display.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/bill_form.dart';
-import 'package:form_filler/features/form_fill/presentation/molecules/image_picker_display.dart';
-import 'package:form_filler/features/form_fill/state/cubit/bill_cubit.dart';
+import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BillFormTemplate extends StatefulWidget {

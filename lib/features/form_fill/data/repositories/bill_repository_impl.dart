@@ -1,23 +1,35 @@
 import 'package:dio/dio.dart';
-import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
+import 'package:form_filler/core/utils/enviroment.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/repositories/bill_repository.dart';
+import 'package:meta/meta.dart';
 
 class BillRepositoryImpl implements BillRepository {
-  final dio = Dio();
+  BillRepositoryImpl({
+    @required this.dio,
+    @required this.env,
+  });
 
   @override
-  Future<Bill> scanBill({String base64Image}) async {
+  final Dio dio;
+
+  @override
+  final Enviroment env;
+
+  @override
+  Future<BillResponse> scanBill({String base64Image}) async {
     final body = {
       'base64': [
         'data:image/jpeg;base64,$base64Image',
       ]
     };
     final response = await dio.post<Map<String, dynamic>>(
-      'https://6a6f3c5d8653.ngrok.io/ocr',
+      env.apiUrl,
       data: body,
     );
     final Map<String, dynamic> data = response.data[0];
-    final bill = Bill.fromMap(data);
+
+    final bill = BillResponse.fromMap(data);
 
     return bill;
   }

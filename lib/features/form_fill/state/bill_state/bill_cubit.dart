@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/repositories/bill_repository.dart';
-import 'package:form_filler/features/form_fill/state/cubit/bill_exception.dart';
+import 'package:form_filler/features/form_fill/state/bill_state/bill_exception.dart';
 
 part 'bill_state.dart';
 
@@ -28,12 +28,12 @@ class BillCubit extends Cubit<BillState> {
 
       _state = _state.copyWith(bill: response);
       emit(_state);
-    } on DioError catch (err) {
-      _handleScanBillErrors(err);
+    } on DioError catch (error) {
+      _handleScanBillErrors(error);
     }
   }
 
-  Future<Bill> _scanBill(File image) async {
+  Future<BillResponse> _scanBill(File image) async {
     if (image == null) {
       throw NoImageToScanException();
     }

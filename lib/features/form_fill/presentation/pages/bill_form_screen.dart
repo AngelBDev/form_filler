@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/templates/bill_form_template.dart';
-import 'package:form_filler/features/form_fill/state/cubit/bill_cubit.dart';
+import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 
 class BillFormScreen extends StatefulWidget {
   static const route = 'bill-form';

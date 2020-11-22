@@ -1,7 +1,7 @@
-import 'package:dartz/dartz.dart';
+/* import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:form_filler/core/error/failures.dart';
-import 'package:form_filler/core/use_case/use_case.dart';
+import 'package:form_filler/core/models/error/failures.dart';
+import 'package:form_filler/core/models/use_case/use_case.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/domain/repositories/form_repository.dart';
 import 'package:meta/meta.dart';
@@ -33,3 +33,4 @@ class ScanBillParams extends Equatable {
         base64Image,
       ];
 }
+ */

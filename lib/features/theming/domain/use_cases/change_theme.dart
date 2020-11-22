@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:form_filler/core/error/failures.dart';
-import 'package:form_filler/core/use_case/use_case.dart';
+import 'package:form_filler/core/models/error/failures.dart';
+import 'package:form_filler/core/models/use_case/use_case.dart';
 import 'package:form_filler/features/theming/domain/data_structures/theme_enum.dart';
 import 'package:form_filler/features/theming/domain/entities/app_theme.dart';
 import 'package:form_filler/features/theming/domain/repositories/theme_repository.dart';

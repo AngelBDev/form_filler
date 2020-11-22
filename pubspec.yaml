@@ -28,6 +28,7 @@ dependencies:
   dio: ^3.0.10
   equatable: ^1.2.5
   flutter_bloc: ^6.1.1
+  flutter_dotenv: ^2.1.0
   get_it: ^5.0.1
   hive: ^1.4.4+1
   image_picker: ^0.6.7+12

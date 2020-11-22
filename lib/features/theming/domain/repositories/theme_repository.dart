@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:form_filler/core/error/failures.dart';
+import 'package:form_filler/core/models/error/failures.dart';
 import 'package:form_filler/features/theming/domain/data_structures/theme_enum.dart';
 import 'package:form_filler/features/theming/domain/entities/app_theme.dart';
 

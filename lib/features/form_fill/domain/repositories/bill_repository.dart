@@ -1,5 +1,15 @@
-import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
+import 'package:dio/dio.dart';
+import 'package:form_filler/core/utils/enviroment.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 
 abstract class BillRepository {
-  Future<Bill> scanBill({String base64Image});
+  BillRepository({
+    this.dio,
+    this.env,
+  });
+
+  final Dio dio;
+  final Enviroment env;
+
+  Future<BillResponse> scanBill({String base64Image});
 }

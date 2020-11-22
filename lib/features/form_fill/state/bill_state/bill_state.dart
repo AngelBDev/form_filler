@@ -10,7 +10,7 @@ abstract class BillState extends Equatable {
 class BillInitial extends BillState with EquatableMixin {
   BillInitial({this.bill, this.errors, this.loading});
 
-  final Bill bill;
+  final BillResponse bill;
   final BillErrors errors;
   final bool loading;
 
@@ -18,7 +18,7 @@ class BillInitial extends BillState with EquatableMixin {
   List<Object> get props => [bill, errors];
 
   BillInitial copyWith({
-    Bill bill,
+    BillResponse bill,
     BillErrors errors,
     bool loading,
   }) {
