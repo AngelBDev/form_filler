@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/pages/bill_form_screen.dart';
 import 'package:form_filler/features/form_fill/presentation/templates/form_fill_template.dart';
-import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 
 class FormFillScreen extends StatefulWidget {
   static const route = 'form';
@@ -67,68 +63,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
     });
   }
 
-  void _onSubmit(BuildContext context) async {
-    var data = {
-      'period': DateFormat('yyyyMM').format(_periodDate),
-      'clientRnc': _clientRNCController.text,
-      'invoices': _bills
-          .map(
-            (bill) => {
-              'rnc': bill.rnc,
-              'ncf': bill.ncf,
-              'invoiceType': bill.transactionType,
-              'date': DateFormat('yyyy/MM/dd').format(bill.date),
-              'payAmount': bill.grossTotal,
-              'itbis': bill.itbis,
-              'invoicePaymentType': bill.paymentType,
-            },
-          )
-          .toList()
-    };
-
-    print('asdfsda');
-    Response<dynamic> result;
-
-    try {
-      result = await Dio().post(
-        'https://6a6f3c5d8653.ngrok.io/excel/fill',
-        data: data,
-      );
-
-      print(result);
-    } catch (e) {
-      print(e);
-    }
-
-    if (result != null && result.data['result'] == 2) {
-      final snackBar = SnackBar(
-        content: Text('ha ocurrido un error!'),
-        backgroundColor: Colors.red,
-      );
-
-      Scaffold.of(context).showSnackBar(snackBar);
-    } else if (result != null && result.data['result'] == 1) {
-      final downloadsDirectory = await getExternalStorageDirectory();
-      try {
-        final name = Uuid().v1();
-        final response = await Dio().download(
-            'https://6a6f3c5d8653.ngrok.io/excel/file/${result.data['codeName']}',
-            '${downloadsDirectory.path}/Documents/${name}.xls');
-        print('full path ${downloadsDirectory.path}/Images/${name}.xls');
-
-        if (response.statusCode == 200) {
-          final snackBar = SnackBar(
-            content: Text('Tu archivo ha sido creado!'),
-            backgroundColor: Colors.green,
-          );
-
-          Scaffold.of(context).showSnackBar(snackBar);
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
-  }
+  void _onSubmit(BuildContext context) async {}
 
   @override
   Widget build(BuildContext context) {

@@ -9,18 +9,33 @@ import 'package:path_provider/path_provider.dart';
 part 'form_606_state.dart';
 
 class Form606Cubit extends Cubit<Form606State> {
-  Form606Cubit({@required this.form606Repository}) : super(Form606Initial());
+  Form606Cubit({
+    @required this.form606Repository,
+  }) : super(
+          Form606Initial(
+            errors: null,
+            loading: false,
+            downloadState: initialDownloadState,
+          ),
+        );
 
   final Form606Repository form606Repository;
 
-  void submitForm({@required Form606 form}) {
-    _trySubmitForm(form: form);
+  void submitForm({@required Form606 form}) async {
+    Form606Initial _state = state;
+    _state = _state.copyWith(loading: true);
+    emit(_state);
+    await _trySubmitForm(form: form);
+    _state = _state.copyWith(loading: false);
+    emit(_state);
   }
 
   Future<void> _trySubmitForm({@required Form606 form}) async {
     try {
       await _submitForm(form: form);
-    } on DioError catch (error) {}
+    } on DioError catch (error) {
+      _handleSubmitFormErrors(error);
+    }
   }
 
   Future<void> _submitForm({@required Form606 form}) async {
@@ -39,67 +54,31 @@ class Form606Cubit extends Cubit<Form606State> {
     return path;
   }
 
-  int _onReceiveProgress(received, total) {}
+  void _onReceiveProgress(received, total) {
+    Form606Initial _state = state;
+    final double progressInPercentage = (received / total * 100);
+    final updatedDownloadState = _state.downloadState.copyWith(
+      progress: progressInPercentage,
+      total: total,
+      downloading: true,
+    );
+    _state = _state.copyWith(downloadState: updatedDownloadState);
+    emit(_state);
+    return;
+  }
 
-  void _onSubmit(Map<String, dynamic> data) async {
-    /*  final data = {
-      'period': DateFormat('yyyyMM').format(_periodDate),
-      'clientRnc': _clientRNCController.text,
-      'invoices': _bills
-          .map(
-            (bill) => {
-              'rnc': bill.rnc,
-              'ncf': bill.ncf,
-              'invoiceType': bill.transactionType,
-              'date': DateFormat('yyyy/MM/dd').format(bill.date),
-              'payAmount': bill.grossTotal,
-              'itbis': bill.itbis,
-              'invoicePaymentType': bill.paymentType,
-            },
-          )
-          .toList()
-    }; */
+  void _handleSubmitFormErrors(DioError error) {
+    Form606Initial _state = state;
 
-    /*   Response<dynamic> result;
-
-    try {
-      result = await Dio().post(
-        'https://6a6f3c5d8653.ngrok.io/excel/fill',
-        data: data,
-      );
-
-      print(result);
-    } catch (e) {
-      print(e);
+    if (error.response.statusCode != 200) {
+      _state = _state.copyWith(errors: FormErrors.server_error);
+      emit(_state);
     }
-
-    if (result != null && result.data['result'] == 2) {
-      final snackBar = SnackBar(
-        content: Text('ha ocurrido un error!'),
-        backgroundColor: Colors.red,
-      );
-
-      Scaffold.of(context).showSnackBar(snackBar);
-    } else if (result != null && result.data['result'] == 1) {
-      final downloadsDirectory = await getExternalStorageDirectory();
-      try {
-        final name = Uuid().v1();
-        final response = await Dio().download(
-            'https://6a6f3c5d8653.ngrok.io/excel/file/${result.data['codeName']}',
-            '${downloadsDirectory.path}/Documents/${name}.xls');
-        print('full path ${downloadsDirectory.path}/Images/${name}.xls');
-
-        if (response.statusCode == 200) {
-          final snackBar = SnackBar(
-            content: Text('Tu archivo ha sido creado!'),
-            backgroundColor: Colors.green,
-          );
-
-          Scaffold.of(context).showSnackBar(snackBar);
-        }
-      } catch (e) {
-        print(e);
-      }
-    } */
   }
 }
+
+final initialDownloadState = DownloadState(
+  downloading: false,
+  progress: 0,
+  total: 0,
+);

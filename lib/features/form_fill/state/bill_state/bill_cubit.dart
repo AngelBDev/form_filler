@@ -14,23 +14,34 @@ class BillCubit extends Cubit<BillState> {
   BillCubit(this._billRepository) : super(BillInitial());
   final BillRepository _billRepository;
 
-  void scanBill(File image) {
-    BillInitial _state = state;
-    _state = _state.copyWith(loading: true);
-    emit(_state);
-    _tryScanBill(image);
+  Future<BillResponse> scanBill(File image) async {
+    _emitLoading(true);
+    final response = await _tryScanBill(image);
+    _emitLoading(false);
+    return response;
   }
 
-  void _tryScanBill(File image) async {
+  void _emitLoading(bool loading) {
     BillInitial _state = state;
-    try {
-      final response = await _scanBill(image);
+    _state.copyWith(loading: loading);
+    emit(_state);
+  }
 
-      _state = _state.copyWith(bill: response);
-      emit(_state);
+  Future<BillResponse> _tryScanBill(File image) async {
+    BillResponse response;
+    try {
+      response = await _scanBill(image);
+      _emitBill(response);
     } on DioError catch (error) {
       _handleScanBillErrors(error);
     }
+    return response;
+  }
+
+  void _emitBill(BillResponse response) {
+    BillInitial _state = state;
+    _state = _state.copyWith(bill: response);
+    emit(_state);
   }
 
   Future<BillResponse> _scanBill(File image) async {
@@ -52,14 +63,14 @@ class BillCubit extends Cubit<BillState> {
     return base64File;
   }
 
-  void _handleScanBillErrors(DioError err) {
+  void _handleScanBillErrors(DioError error) {
     BillInitial _state = state;
-    if (err is NoImageToScanException) {
+    if (error is NoImageToScanException) {
       _state = _state.copyWith(errors: BillErrors.null_image);
       emit(_state);
     }
 
-    if (err.response.statusCode != 200) {
+    if (error.response.statusCode != 200) {
       _state = _state.copyWith(errors: BillErrors.server_error);
       emit(_state);
     }

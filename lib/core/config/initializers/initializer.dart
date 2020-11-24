@@ -5,8 +5,8 @@ import 'package:form_filler/core/config/initializers/injection_container_initial
 import 'package:form_filler/core/config/params/init_app_params.dart';
 
 void initMain() async {
+  await DotEnv().load('.env');
   _service_locator.init();
-  await DotEnv().load('./../../../.env');
 }
 
 void initApp({@required InitAppParams params}) {}

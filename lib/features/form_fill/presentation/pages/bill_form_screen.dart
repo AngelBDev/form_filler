@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,14 +20,13 @@ class _BillFormScreenState extends State<BillFormScreen> {
   final TextEditingController _itbisController = TextEditingController();
 
   Bill _bill;
-  File _image;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final BillFormScreenParams arguments =
         ModalRoute.of(context).settings.arguments;
-    _image = arguments.image;
+
     _bill = arguments.bill;
     _rncController.text = _bill?.rnc[0];
     _ncfController.text = _bill?.ncf;
@@ -72,22 +69,42 @@ class _BillFormScreenState extends State<BillFormScreen> {
     });
   }
 
-  void _onSubmit() {
-    /* final bill = Bill(
-      date: _date,
-      grossTotal: int.tryParse(_grossTotalController.text),
-      itbis: int.tryParse(_itbisController.text),
-      transactionType: _transactionType,
-      ncf: _ncfController.text,
-      rnc: _rncController.text,
-      paymentType: _paymentType,
-    ); */
-/* 
-    Navigator.of(context).pop(bill); */
+  void _onSubmit(Bill bill) {
+    Navigator.of(context).pop(bill);
   }
 
-  void _scanImage(File image) async {
-    BlocProvider.of<BillCubit>(context).scanBill(image);
+  void _onPressedRncOption(String value) {
+    setState(() {
+      _rncController.text = value;
+      _bill = _bill.copyWith(rnc: value);
+    });
+  }
+
+  void _onPressedNcfOption(String value) {
+    setState(() {
+      _ncfController.text = value;
+      _bill = _bill.copyWith(ncf: value);
+    });
+  }
+
+  void _onPressedGrossTotalOption(num value) {
+    _grossTotalController.text = '$value';
+    setState(() {
+      _bill = _bill.copyWith(grossTotal: value);
+    });
+  }
+
+  void _onPressedItbisOption(num value) {
+    _itbisController.text = '$value';
+    setState(() {
+      _bill = _bill.copyWith(itbis: value);
+    });
+  }
+
+  void _onPressedDateOption(DateTime value) {
+    setState(() {
+      _bill = _bill.copyWith(date: value);
+    });
   }
 
   @override
@@ -95,20 +112,25 @@ class _BillFormScreenState extends State<BillFormScreen> {
     return BlocBuilder<BillCubit, BillState>(
       builder: (context, state) {
         BillInitial _state = state;
+
         return BillFormTemplate(
-          bill: _state.bill,
-          image: _image,
+          bill: _bill,
+          billResponse: _state.bill,
           rncController: _rncController,
           ncfController: _ncfController,
           grossTotalController: _grossTotalController,
           itbisController: _itbisController,
+          onPressedRncOption: _onPressedRncOption,
+          onPressedNcfOption: _onPressedNcfOption,
+          onPressedGrossTotalOption: _onPressedGrossTotalOption,
+          onPressedItbisOption: _onPressedItbisOption,
+          onPressedDateOption: _onPressedDateOption,
           onChangePaymentType: _onChangePaymentType,
           onTapPaymentType: _onTapPaymentType,
           onChangeTransactionType: _onChangeTransactionType,
           onTapTransactionType: _onTapTransactionType,
           onChangeDate: _onChangeDate,
           onSubmit: _onSubmit,
-          scanImage: _scanImage,
         );
       },
     );
@@ -117,10 +139,11 @@ class _BillFormScreenState extends State<BillFormScreen> {
 
 class BillFormScreenParams extends Equatable {
   final Bill bill;
-  final File image;
 
-  BillFormScreenParams({this.bill, this.image});
+  BillFormScreenParams({
+    this.bill,
+  });
 
   @override
-  List<Object> get props => [bill, image];
+  List<Object> get props => [bill];
 }

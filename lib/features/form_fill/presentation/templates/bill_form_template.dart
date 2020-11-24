@@ -2,23 +2,27 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:form_filler/core/presentation/atoms/accent_button.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
-import 'package:form_filler/features/camera/presentation/molecules/image_picker_display.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/bill_form.dart';
 import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
-import 'package:image_picker/image_picker.dart';
 
 class BillFormTemplate extends StatefulWidget {
   const BillFormTemplate({
     Key key,
     this.image,
     @required this.bill,
+    @required this.billResponse,
     @required this.rncController,
     @required this.ncfController,
     @required this.grossTotalController,
     @required this.itbisController,
+    @required this.onPressedRncOption,
+    @required this.onPressedNcfOption,
+    @required this.onPressedGrossTotalOption,
+    @required this.onPressedItbisOption,
+    @required this.onPressedDateOption,
     @required this.onChangePaymentType,
     @required this.onTapTransactionType,
     @required this.onTapPaymentType,
@@ -30,16 +34,22 @@ class BillFormTemplate extends StatefulWidget {
 
   final File image;
   final Bill bill;
+  final BillResponse billResponse;
   final TextEditingController rncController;
   final TextEditingController ncfController;
   final TextEditingController grossTotalController;
   final TextEditingController itbisController;
+  final void Function(String) onPressedRncOption;
+  final void Function(String) onPressedNcfOption;
+  final void Function(num) onPressedGrossTotalOption;
+  final void Function(num) onPressedItbisOption;
+  final void Function(DateTime) onPressedDateOption;
   final void Function(int value) onChangePaymentType;
   final void Function() onTapPaymentType;
   final void Function(int value) onChangeTransactionType;
   final void Function() onTapTransactionType;
   final void Function(DateTime date) onChangeDate;
-  final void Function() onSubmit;
+  final void Function(Bill bill) onSubmit;
   final void Function(File image) scanImage;
 
   @override
@@ -47,22 +57,6 @@ class BillFormTemplate extends StatefulWidget {
 }
 
 class _BillFormTemplateState extends State<BillFormTemplate> {
-  final _picker = ImagePicker();
-
-  File _image;
-
-  void _getImage(ImageSource imageSource) async {
-    final _pickedFile = await _picker.getImage(source: imageSource);
-
-    setState(() {
-      if (_pickedFile != null) {
-        _image = File(_pickedFile.path);
-      } else {
-        print('Seleccionar imagen');
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FocusHandler(
@@ -87,7 +81,7 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
               Icons.check,
               color: Colors.green,
             ),
-            onPressed: widget.onSubmit,
+            onPressed: () => widget.onSubmit(widget.bill),
           ),
       ],
     );
@@ -118,18 +112,11 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
             ),
             child: Column(
               children: [
-                ImagePickerDisplay(
-                  image: _image,
-                  controls: _buildImagePickerDisplayControls(context),
-                  onGalleryPressed: () => _getImage(
-                    ImageSource.gallery,
-                  ),
-                ),
-                SizedBox(height: 30),
                 Padding(
                   padding: EdgeInsets.all(16),
                   child: BillForm(
                     bill: widget.bill,
+                    billResponse: widget.billResponse,
                     rncController: widget.rncController,
                     ncfController: widget.ncfController,
                     grossTotalController: widget.grossTotalController,
@@ -137,6 +124,11 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
                     date: widget.bill?.date,
                     transactionType: widget.bill?.transactionType,
                     paymentType: widget.bill?.paymentType,
+                    onPressedRncOption: widget.onPressedRncOption,
+                    onPressedNcfOption: widget.onPressedNcfOption,
+                    onPressedGrossTotalOption: widget.onPressedGrossTotalOption,
+                    onPressedItbisOption: widget.onPressedItbisOption,
+                    onPressedDateOption: widget.onPressedDateOption,
                     onChangePaymentType: widget.onChangePaymentType,
                     onTapPaymentType: widget.onTapPaymentType,
                     onChangeTransactionType: widget.onChangeTransactionType,
@@ -176,38 +168,9 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  List<Widget> _buildImagePickerDisplayControls(BuildContext context) {
-    return [
-      AccentButton(
-        onPressed: () {
-          widget.scanImage(_image);
-        },
-        child: Row(
-          children: [
-            Icon(Icons.scanner_rounded),
-            SizedBox(width: 15),
-            Text('Escanear'),
-          ],
-        ),
-      ),
-      AccentButton(
-        onPressed: () => _getImage(
-          ImageSource.gallery,
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.photo_library),
-            SizedBox(width: 15),
-            Text('Galeria'),
-          ],
-        ),
-      ),
-    ];
-  }
-
   FloatingActionButton _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () => _getImage(ImageSource.camera),
+      /*    onPressed: () => _getImage(ImageSource.camera), */
       tooltip: 'Seleccionar imagen',
       child: Icon(Icons.add_a_photo),
     );

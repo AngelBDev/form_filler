@@ -7,15 +7,12 @@ abstract class BillState extends Equatable {
   List<Object> get props => [];
 }
 
-class BillInitial extends BillState with EquatableMixin {
+class BillInitial extends BillState {
   BillInitial({this.bill, this.errors, this.loading});
 
   final BillResponse bill;
   final BillErrors errors;
   final bool loading;
-
-  @override
-  List<Object> get props => [bill, errors];
 
   BillInitial copyWith({
     BillResponse bill,
@@ -28,6 +25,9 @@ class BillInitial extends BillState with EquatableMixin {
       loading: loading ?? this.loading,
     );
   }
+
+  @override
+  List<Object> get props => [bill, errors];
 }
 
 enum BillErrors {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/date_picker.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/dropdown_button_variant.dart';
@@ -14,14 +15,21 @@ class BillForm extends StatelessWidget {
     @required this.transactionType,
     @required this.paymentType,
     @required this.date,
+    @required this.onPressedRncOption,
+    @required this.onPressedNcfOption,
+    @required this.onPressedGrossTotalOption,
+    @required this.onPressedItbisOption,
+    @required this.onPressedDateOption,
     @required this.onTapTransactionType,
     @required this.onChangeTransactionType,
     @required this.onTapPaymentType,
     @required this.onChangePaymentType,
     @required this.onChangeDate,
+    this.billResponse,
   });
 
   final Bill bill;
+  final BillResponse billResponse;
   final TextEditingController rncController;
   final TextEditingController ncfController;
   final TextEditingController grossTotalController;
@@ -29,6 +37,11 @@ class BillForm extends StatelessWidget {
   final int transactionType;
   final int paymentType;
   final DateTime date;
+  final void Function(String) onPressedRncOption;
+  final void Function(String) onPressedNcfOption;
+  final void Function(num) onPressedGrossTotalOption;
+  final void Function(num) onPressedItbisOption;
+  final void Function(DateTime) onPressedDateOption;
   final void Function() onTapTransactionType;
   final void Function(int value) onChangeTransactionType;
   final void Function() onTapPaymentType;
@@ -60,6 +73,51 @@ class BillForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rncOptions = billResponse.rnc
+        .map(
+          (option) => ResponseOptionItem(
+            label: option,
+            value: option,
+          ),
+        )
+        .toList();
+
+    final nfcOptions = billResponse.ncf
+        .map(
+          (option) => ResponseOptionItem(
+            label: option,
+            value: option,
+          ),
+        )
+        .toList();
+
+    final grossTotalOptions = billResponse.grossTotal
+        .map(
+          (option) => ResponseOptionItem(
+            label: '$option',
+            value: option,
+          ),
+        )
+        .toList();
+
+    final itbisOptions = billResponse.itbis
+        .map(
+          (option) => ResponseOptionItem(
+            label: '$option',
+            value: option,
+          ),
+        )
+        .toList();
+
+    final dateOptions = billResponse.date
+        .map(
+          (option) => ResponseOptionItem(
+            label: option.toString(),
+            value: option,
+          ),
+        )
+        .toList();
+
     return Column(
       children: [
         TextFieldVariant(
@@ -67,11 +125,27 @@ class BillForm extends StatelessWidget {
           hintText: 'RNC',
         ),
         SizedBox(
+          height: 10,
+        ),
+        _buildOptions<String>(
+          context,
+          options: rncOptions,
+          onPressed: onPressedRncOption,
+        ),
+        SizedBox(
           height: 20,
         ),
         TextFieldVariant(
           controller: ncfController,
           hintText: 'NFC',
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        _buildOptions<String>(
+          context,
+          options: nfcOptions,
+          onPressed: onPressedNcfOption,
         ),
         SizedBox(
           height: 20,
@@ -82,12 +156,28 @@ class BillForm extends StatelessWidget {
           keyboardType: TextInputType.number,
         ),
         SizedBox(
+          height: 10,
+        ),
+        _buildOptions<num>(
+          context,
+          options: grossTotalOptions,
+          onPressed: onPressedGrossTotalOption,
+        ),
+        SizedBox(
           height: 20,
         ),
         TextFieldVariant(
           controller: itbisController,
           hintText: 'ITBIS',
           keyboardType: TextInputType.number,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        _buildOptions<num>(
+          context,
+          options: itbisOptions,
+          onPressed: onPressedItbisOption,
         ),
         SizedBox(
           height: 20,
@@ -98,6 +188,14 @@ class BillForm extends StatelessWidget {
           labelText: 'Fecha',
           maxYear: 2025,
           minYear: 1950,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        _buildOptions<DateTime>(
+          context,
+          options: dateOptions,
+          onPressed: onPressedDateOption,
         ),
         SizedBox(
           height: 20,
@@ -150,4 +248,45 @@ class BillForm extends StatelessWidget {
         )
         .toList();
   }
+
+  Widget _buildOptions<T>(
+    BuildContext context, {
+    @required List<ResponseOptionItem> options,
+    @required void Function(T value) onPressed,
+    bool selected = false,
+  }) {
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 500),
+      transitionBuilder: (child, animation) {
+        return ScaleTransition(
+          scale: animation,
+          child: child,
+        );
+      },
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (final option in options)
+            InputChip(
+              selected: selected,
+              onPressed: () => onPressed(option.value),
+              padding: EdgeInsets.all(5),
+              label: Text(
+                option.label,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class ResponseOptionItem<T> {
+  ResponseOptionItem({
+    this.value,
+    this.label,
+  });
+
+  final T value;
+  final String label;
 }
