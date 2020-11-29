@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/core/presentation/atoms/primary_button_label.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/form_606_variant.dart';
+import 'package:form_filler/features/form_fill/state/form_606_state/form_606_cubit.dart';
 
 class FormFillTemplate extends StatelessWidget {
   const FormFillTemplate({
@@ -16,6 +18,7 @@ class FormFillTemplate extends StatelessWidget {
     @required this.onTapBillRemove,
     @required this.onSubmit,
     @required this.onChangePeriodDate,
+    @required this.form606Listener,
     this.images,
     this.bills,
   }) : super(key: key);
@@ -29,6 +32,7 @@ class FormFillTemplate extends StatelessWidget {
   final void Function(Bill value, int index) onTapBillField;
   final void Function(BuildContext context) onSubmit;
   final void Function(DateTime date) onChangePeriodDate;
+  final Function(BuildContext context, Form606State state) form606Listener;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +46,7 @@ class FormFillTemplate extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    /*   final canSubmit = bills.isNotEmpty &&
-        periodDate.toString().trim().isNotEmpty &&
-        clientRNCController.text.trim().isNotEmpty; */
+    final canSubmit = _canSubmit();
 
     return AppBar(
       elevation: 0,
@@ -59,7 +61,7 @@ class FormFillTemplate extends StatelessWidget {
             ),
             color: Theme.of(context).accentColor,
             disabledColor: Colors.grey.withOpacity(.4),
-            onPressed: /* canSubmit ? */ () => onSubmit(context) /* : null */,
+            onPressed: canSubmit ? () => onSubmit(context) : null,
           ),
         ),
       ],
@@ -67,6 +69,66 @@ class FormFillTemplate extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
+    return BlocConsumer<Form606Cubit, Form606State>(
+      listener: form606Listener,
+      builder: _builder,
+    );
+  }
+
+  Widget _builder(BuildContext context, Form606State state) {
+    if (state is Form606Initial) {
+      if (state.loading) {
+        return _buildLoading(context, state);
+      }
+
+      if (state.downloadState.downloading) {
+        return _buildDownloading(context, state);
+      }
+    }
+
+    return _buildForm(context);
+  }
+
+  Widget _buildLoading(BuildContext context, Form606State state) {
+    if (state is Form606Initial) {
+      if (state.loading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return _buildForm(context);
+      }
+    }
+
+    return _buildForm(context);
+  }
+
+  Widget _buildDownloading(BuildContext context, Form606State state) {
+    if (state is Form606Initial) {
+      if (state.downloadState.downloading) {
+        final progress = state.downloadState.progress;
+        return Column(
+          children: [
+            Center(
+              child: CircularProgressIndicator(
+                value: progress,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              progress.toString(),
+            )
+          ],
+        );
+      } else {
+        return _buildForm(context);
+      }
+    }
+
+    return _buildForm(context);
+  }
+
+  Widget _buildForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form606Variant(
@@ -88,5 +150,15 @@ class FormFillTemplate extends StatelessWidget {
       tooltip: 'Seleccionar imagen',
       child: Icon(Icons.add),
     );
+  }
+
+  bool _canSubmit() {
+    var canSubmit = true;
+
+    if (bills.isEmpty) canSubmit = false;
+    if (periodDate.toString().trim().isEmpty) canSubmit = false;
+    if (clientRNCController.text.trim().isEmpty) canSubmit = false;
+
+    return canSubmit;
   }
 }

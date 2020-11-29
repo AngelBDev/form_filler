@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dio/src/dio.dart';
 import 'package:form_filler/core/utils/enviroment.dart';
@@ -24,7 +22,7 @@ class Form606RepositoryImpl implements Form606Repository {
     final body = form.toMap();
 
     final response = await dio.post<Map<String, dynamic>>(
-      '${env.apiUrl}/excel/fill',
+      'https://form-filler.loca.lt/excel/fill',
       data: body,
     );
 
@@ -40,17 +38,12 @@ class Form606RepositoryImpl implements Form606Repository {
     @required void Function(int, int) onReceiveProgress,
   }) async {
     final name = 'Excel form - ${DateTime.now()}';
-    final url = '${env.apiUrl}/excel/file/codename';
+    final url = 'https://form-filler.loca.lt/excel/file/$codename';
     final savePath = '$downloadPath/Documents/${name}.xls';
-    final options = Options(
-      headers: {
-        HttpHeaders.acceptEncodingHeader: '*',
-      },
-    );
-    final response = await dio.download(
+
+    Response<Map<String, dynamic>> response = await dio.download(
       url,
       savePath,
-      options: options,
       onReceiveProgress: onReceiveProgress,
     );
 

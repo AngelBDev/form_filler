@@ -7,6 +7,8 @@ SnackBar defaultSnackBar({
   return SnackBar(
     backgroundColor: _getColor(type),
     content: _buildMessage(message),
+    duration: Duration(seconds: 3),
+    behavior: SnackBarBehavior.floating,
   );
 }
 

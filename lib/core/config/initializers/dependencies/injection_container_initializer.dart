@@ -3,6 +3,6 @@ import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
 
-void init() {
-  initCore();
+void init() async {
+  await initCore();
 }

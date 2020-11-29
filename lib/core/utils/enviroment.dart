@@ -6,7 +6,7 @@ class Enviroment extends Equatable {
 
   final Map<String, dynamic> env;
 
-  String get apiUrl => env['VAR_API_URL'];
+  String get apiUrl => 'https://form-filler.loca.lt';
 
   @override
   List<Object> get props => [env];

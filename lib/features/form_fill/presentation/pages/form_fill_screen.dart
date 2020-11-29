@@ -2,9 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_filler/core/helpers/_helpers.dart';
+import 'package:form_filler/core/presentation/atoms/defult_snack_bar.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
+import 'package:form_filler/features/form_fill/domain/entities/form_606.dart';
 import 'package:form_filler/features/form_fill/presentation/pages/bill_form_screen.dart';
 import 'package:form_filler/features/form_fill/presentation/templates/form_fill_template.dart';
+import 'package:form_filler/features/form_fill/state/form_606_state/form_606_cubit.dart';
 
 class FormFillScreen extends StatefulWidget {
   static const route = 'form';
@@ -28,13 +33,25 @@ class _FormFillScreenState extends State<FormFillScreen> {
     super.dispose();
   }
 
-  void _editBill(Bill bill, int index) async {
-    final updatedBill = await _getBill(bill);
+  @override
+  Widget build(BuildContext context) {
+    return FormFillTemplate(
+      bills: _bills,
+      images: _images,
+      clientRNCController: _clientRNCController,
+      periodDate: _periodDate,
+      onChangePeriodDate: _onChangePeriodDate,
+      onTapAddBill: _addNewBill,
+      onTapBillField: _editBill,
+      onTapBillRemove: _removeBill,
+      onSubmit: _onSubmit,
+      form606Listener: form606Listener,
+    );
+  }
 
-    if (updatedBill == null) return;
-
+  void _onChangePeriodDate(date) {
     setState(() {
-      _bills[index] = updatedBill;
+      _periodDate = date;
     });
   }
 
@@ -45,6 +62,16 @@ class _FormFillScreenState extends State<FormFillScreen> {
 
     setState(() {
       _bills.add(newBill);
+    });
+  }
+
+  void _editBill(Bill bill, int index) async {
+    final updatedBill = await _getBill(bill);
+
+    if (updatedBill == null) return;
+
+    setState(() {
+      _bills[index] = updatedBill;
     });
   }
 
@@ -63,26 +90,33 @@ class _FormFillScreenState extends State<FormFillScreen> {
     });
   }
 
-  void _onSubmit(BuildContext context) async {}
-
-  @override
-  Widget build(BuildContext context) {
-    return FormFillTemplate(
-      bills: _bills,
-      images: _images,
-      clientRNCController: _clientRNCController,
-      periodDate: _periodDate,
-      onChangePeriodDate: _onChangePeriodDate,
-      onTapAddBill: _addNewBill,
-      onTapBillField: _editBill,
-      onTapBillRemove: _removeBill,
-      onSubmit: _onSubmit,
-    );
+  void _onSubmit(BuildContext context) async {
+    final formData = _getFormData();
+    BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
   }
 
-  void _onChangePeriodDate(date) {
-    setState(() {
-      _periodDate = date;
-    });
+  Form606 _getFormData() {
+    final formData = Form606(
+      period: _periodDate,
+      clientRNC: _clientRNCController.text,
+      bills: _bills,
+    );
+
+    return formData;
+  }
+
+  void form606Listener(BuildContext context, Form606State state) {
+    if (state is Form606Initial) {
+      if (state.errors == FormErrors.server_error) {
+        showSnackBar(
+          context,
+          defaultSnackBar(
+            message:
+                'Ha ocurrido un error en nuestros servidores, por favor intenta de nuevo mas tarde.',
+            type: SnackBarType.error,
+          ),
+        );
+      }
+    }
   }
 }

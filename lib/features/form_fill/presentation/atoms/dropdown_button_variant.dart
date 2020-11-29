@@ -18,6 +18,7 @@ class DropdownButtonVariant<Type> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeumorphicContainer(
+      isDefaultContainer: true,
       primaryColor: Theme.of(context).accentColor,
       child: Container(
         padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 15),

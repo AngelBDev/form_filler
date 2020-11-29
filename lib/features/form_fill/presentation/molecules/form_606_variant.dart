@@ -67,7 +67,7 @@ class Form606Variant extends StatelessWidget {
               onTapField: () => onTapBillField(bill, index),
               onTapRemove: () => onTapBillRemove(bill, index),
               title: Text(
-                'Bill ${index + 1}: ${bill.rnc} ${DateFormat.yMd().format(bill.date)}',
+                'Factura ${index + 1}: ${bill.rnc} ${DateFormat.yMd().format(bill.date)}',
                 style: TextStyle(
                   color: Colors.brown,
                   fontSize: 18,

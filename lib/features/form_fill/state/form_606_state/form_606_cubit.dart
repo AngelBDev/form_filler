@@ -23,8 +23,7 @@ class Form606Cubit extends Cubit<Form606State> {
   final Form606Repository _form606Repository;
 
   void submitForm({@required Form606 form}) async {
-    Form606Initial _state = state;
-    _state = _state.copyWith(loading: true);
+   
     emit(_state);
     await _trySubmitForm(form: form);
     _state = _state.copyWith(loading: false);
@@ -41,6 +40,11 @@ class Form606Cubit extends Cubit<Form606State> {
 
   Future<void> _submitForm({@required Form606 form}) async {
     final codeName = await _form606Repository.submit(form: form);
+    await _dowloadFile(codeName);
+  }
+
+  Future _dowloadFile(String codeName) async {
+    
 
     await _form606Repository.downloadFormFile(
       codename: codeName,
@@ -49,15 +53,17 @@ class Form606Cubit extends Cubit<Form606State> {
     );
   }
 
+  
+
   Future<String> _getDownloadPath() async {
     final downloadDirectory = await getExternalStorageDirectory();
     final path = downloadDirectory.path;
     return path;
   }
 
-  void _onReceiveProgress(received, total) {
+  void _onReceiveProgress(num received, num total) {
     Form606Initial _state = state;
-    final double progressInPercentage = (received / total * 100);
+    final num progressInPercentage = (received / total * 100).ceil();
     final updatedDownloadState = _state.downloadState.copyWith(
       progress: progressInPercentage,
       total: total,
@@ -71,10 +77,15 @@ class Form606Cubit extends Cubit<Form606State> {
   void _handleSubmitFormErrors(DioError error) {
     Form606Initial _state = state;
 
-    if (error.response.statusCode != 200) {
+    if (error?.response?.statusCode != 200) {
       _state = _state.copyWith(errors: FormErrors.server_error);
       emit(_state);
     }
+  }
+
+  void _emitLoadingState(bool loading) {
+     Form606Initial _state = state;
+    _state = _state.copyWith(loading: loading);
   }
 }
 

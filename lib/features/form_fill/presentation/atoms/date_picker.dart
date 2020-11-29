@@ -40,6 +40,7 @@ class DatePicker extends StatelessWidget {
       onTap: () => _selectDate(context),
       child: NeumorphicContainer(
         primaryColor: Theme.of(context).accentColor,
+        isDefaultContainer: true,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
           child: Row(

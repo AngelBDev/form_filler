@@ -14,6 +14,7 @@ class TextFieldVariant extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicContainer(
       primaryColor: Theme.of(context).accentColor,
+      isDefaultContainer: true,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
         child: TextField(

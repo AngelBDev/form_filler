@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_filler/core/presentation/atoms/neumorphic_container.dart';
 
 class AddedField extends StatelessWidget {
   const AddedField({
@@ -15,14 +16,17 @@ class AddedField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTapField,
-      title: title,
-      trailing: IconButton(
-        onPressed: onTapRemove,
-        icon: Icon(
-          Icons.remove_circle,
-          color: Colors.red.shade300,
+    return NeumorphicContainer(
+      primaryColor: Colors.brown,
+      child: ListTile(
+        onTap: onTapField,
+        title: title,
+        trailing: IconButton(
+          onPressed: onTapRemove,
+          icon: Icon(
+            Icons.remove_circle,
+            color: Colors.red.shade300,
+          ),
         ),
       ),
     );
