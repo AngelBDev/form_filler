@@ -7,10 +7,11 @@ final Map<ThemeOptions, AppTheme> themesMock = {
   ThemeOptions.crimson: AppTheme(
     isDark: false,
     lightPalette: ColorPalette(
-        isDark: false,
-        primaryColor: Colors.red,
-        accentColor: Colors.pink,
-        backgroundColor: Colors.white),
+      isDark: false,
+      primaryColor: Colors.red,
+      accentColor: Colors.pink,
+      backgroundColor: Colors.white,
+    ),
   )
 };
 
@@ -25,9 +26,13 @@ final Map<ThemeOptions, AppTheme> themes = {
     ),
     darkPalette: ColorPalette(
       isDark: true,
-      accentColor: Colors.brown,
-      primaryColor: Colors.brown,
-      backgroundColor: Colors.white,
+      /*      accentColor: Colors.blueGrey, */
+      primaryColor: Color(0xfffdc28d),
+      backgroundColor: Color(0xfffdc28d),
+      /*     isDark: true, */
+      accentColor: Color.fromRGBO(50, 50, 50, 1),
+/*       primaryColor: Color.fromRGBO(200, 200, 200, 1),
+      backgroundColor: Color.fromRGBO(200, 200, 200, 1), */
     ),
   ),
   ThemeOptions.green: AppTheme(

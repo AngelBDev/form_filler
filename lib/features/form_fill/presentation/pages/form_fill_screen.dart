@@ -18,15 +18,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
   final TextEditingController _clientRNCController = TextEditingController();
   DateTime _periodDate = DateTime.now();
 
-  @override
-  void initState() {
-    super.initState();
-
-    _clientRNCController.addListener(() {
-      setState(() {});
-    });
-  }
-
   final List<Bill> _bills = [];
 
   List<File> _images;
@@ -37,29 +28,38 @@ class _FormFillScreenState extends State<FormFillScreen> {
     super.dispose();
   }
 
-  void _onTapAddBill() {
-    _onTapBillField();
+  void _editBill(Bill bill, int index) async {
+    final updatedBill = await _getBill(bill);
+
+    if (updatedBill == null) return;
+
+    setState(() {
+      _bills[index] = updatedBill;
+    });
   }
 
-  void _onTapBillField([Bill value]) async {
+  void _addNewBill() async {
+    final newBill = await _getBill();
+
+    if (newBill == null) return;
+
+    setState(() {
+      _bills.add(newBill);
+    });
+  }
+
+  Future<Bill> _getBill([Bill billToEdit]) async {
     final bill = await Navigator.of(context).pushNamed(
       BillFormScreen.route,
-      arguments: BillFormScreenParams(bill: value),
+      arguments: BillFormScreenParams(bill: billToEdit),
     );
-    _addBill(bill);
+
+    return bill;
   }
 
-  void _addBill(Bill value) {
-    if (value != null) {
-      setState(() {
-        _bills.add(value);
-      });
-    }
-  }
-
-  void _onTapBillRemove(Bill value, int index) {
+  void _removeBill(Bill value, int index) {
     setState(() {
-      _bills.remove(value);
+      _bills.removeAt(index);
     });
   }
 
@@ -73,9 +73,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
       clientRNCController: _clientRNCController,
       periodDate: _periodDate,
       onChangePeriodDate: _onChangePeriodDate,
-      onTapAddBill: _onTapAddBill,
-      onTapBillField: _onTapBillField,
-      onTapBillRemove: _onTapBillRemove,
+      onTapAddBill: _addNewBill,
+      onTapBillField: _editBill,
+      onTapBillRemove: _removeBill,
       onSubmit: _onSubmit,
     );
   }

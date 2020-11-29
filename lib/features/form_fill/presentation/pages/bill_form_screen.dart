@@ -1,9 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/templates/bill_form_template.dart';
-import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 
 class BillFormScreen extends StatefulWidget {
   static const route = 'bill-form';
@@ -24,14 +23,22 @@ class _BillFormScreenState extends State<BillFormScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _initRouteParams();
+    _initMembers();
+  }
+
+  void _initMembers() {
+    _rncController.text = _bill.rnc;
+    _ncfController.text = _bill.ncf;
+    _itbisController.text = _bill.itbis?.toString();
+    _grossTotalController.text = _bill.grossTotal?.toString();
+  }
+
+  void _initRouteParams() {
     final BillFormScreenParams arguments =
         ModalRoute.of(context).settings.arguments;
 
-    _bill = arguments.bill;
-    _rncController.text = _bill?.rnc[0];
-    _ncfController.text = _bill?.ncf;
-    _itbisController.text = _bill?.itbis?.toString();
-    _bill?.grossTotal?.toString();
+    _bill = arguments.bill ?? Bill();
   }
 
   @override
@@ -70,7 +77,21 @@ class _BillFormScreenState extends State<BillFormScreen> {
   }
 
   void _onSubmit(Bill bill) {
-    Navigator.of(context).pop(bill);
+    final updateddBill = _addBillSubmitData(bill);
+    Navigator.of(context).pop(updateddBill);
+  }
+
+  Bill _addBillSubmitData(Bill bill) {
+    final itbis = int.tryParse(_itbisController.text);
+    final grossTotal = int.tryParse(_grossTotalController.text);
+    final updatedBill = bill.copyWith(
+      rnc: _rncController.text,
+      ncf: _ncfController.text,
+      itbis: itbis,
+      grossTotal: grossTotal,
+    );
+
+    return updatedBill;
   }
 
   void _onPressedRncOption(String value) {
@@ -109,31 +130,32 @@ class _BillFormScreenState extends State<BillFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BillCubit, BillState>(
+    /*    return BlocBuilder<BillCubit, BillState>(
       builder: (context, state) {
-        BillInitial _state = state;
+        BillInitial _state = state; */
 
-        return BillFormTemplate(
-          bill: _bill,
-          billResponse: _state.bill,
-          rncController: _rncController,
-          ncfController: _ncfController,
-          grossTotalController: _grossTotalController,
-          itbisController: _itbisController,
-          onPressedRncOption: _onPressedRncOption,
-          onPressedNcfOption: _onPressedNcfOption,
-          onPressedGrossTotalOption: _onPressedGrossTotalOption,
-          onPressedItbisOption: _onPressedItbisOption,
-          onPressedDateOption: _onPressedDateOption,
-          onChangePaymentType: _onChangePaymentType,
-          onTapPaymentType: _onTapPaymentType,
-          onChangeTransactionType: _onChangeTransactionType,
-          onTapTransactionType: _onTapTransactionType,
-          onChangeDate: _onChangeDate,
-          onSubmit: _onSubmit,
-        );
-      },
+    return BillFormTemplate(
+      bill: _bill,
+      /*     billResponse: _state.bill, */
+      billResponse: BillResponse(),
+      rncController: _rncController,
+      ncfController: _ncfController,
+      grossTotalController: _grossTotalController,
+      itbisController: _itbisController,
+      onPressedRncOption: _onPressedRncOption,
+      onPressedNcfOption: _onPressedNcfOption,
+      onPressedGrossTotalOption: _onPressedGrossTotalOption,
+      onPressedItbisOption: _onPressedItbisOption,
+      onPressedDateOption: _onPressedDateOption,
+      onChangePaymentType: _onChangePaymentType,
+      onTapPaymentType: _onTapPaymentType,
+      onChangeTransactionType: _onChangeTransactionType,
+      onTapTransactionType: _onTapTransactionType,
+      onChangeDate: _onChangeDate,
+      onSubmit: _onSubmit,
     );
+    /*  },
+    ); */
   }
 }
 

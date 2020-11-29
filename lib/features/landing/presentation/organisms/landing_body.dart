@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:form_filler/core/presentation/atoms/accent_button.dart';
 import 'package:form_filler/core/presentation/atoms/logo.dart';
 import 'package:form_filler/core/presentation/atoms/primary_button.dart';
+import 'package:form_filler/core/presentation/atoms/primary_button_label.dart';
 import 'package:form_filler/features/landing/presentation/molecules/landing_form.dart';
 
 class LandingBody extends StatelessWidget {
@@ -20,14 +20,13 @@ class LandingBody extends StatelessWidget {
       child: Column(
         children: [
           Logo(),
+          SizedBox(
+            height: 50,
+          ),
           LandingForm(
             primaryButton: PrimaryButton(
-              child: Text('Llenar formulario'),
+              child: PrimaryButtonLabel(text: 'Llenar Formulario'),
               onPressed: onPressPrimaryButton?.call,
-            ),
-            secundaryButton: AccentButton(
-              child: Text('Ver historial'),
-              onPressed: onPressSecundaryButton?.call,
             ),
           ),
         ],

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
 import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
@@ -75,7 +74,7 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
       title: Text('Formulario de factura'),
       elevation: 0,
       actions: [
-        if (isFormFilled)
+        if (/* isFormFilled */ true)
           IconButton(
             icon: Icon(
               Icons.check,
@@ -103,44 +102,44 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
   ) {
     final paddingTop = MediaQuery.of(context).padding.top;
     return Builder(
-      builder: (context) => BlocListener<BillCubit, BillState>(
+      builder: (context) =>
+          /*BlocListener<BillCubit, BillState>(
         listener: _listener,
-        child: SingleChildScrollView(
-          child: (Padding(
-            padding: EdgeInsets.only(
-              top: paddingTop,
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: BillForm(
-                    bill: widget.bill,
-                    billResponse: widget.billResponse,
-                    rncController: widget.rncController,
-                    ncfController: widget.ncfController,
-                    grossTotalController: widget.grossTotalController,
-                    itbisController: widget.itbisController,
-                    date: widget.bill?.date,
-                    transactionType: widget.bill?.transactionType,
-                    paymentType: widget.bill?.paymentType,
-                    onPressedRncOption: widget.onPressedRncOption,
-                    onPressedNcfOption: widget.onPressedNcfOption,
-                    onPressedGrossTotalOption: widget.onPressedGrossTotalOption,
-                    onPressedItbisOption: widget.onPressedItbisOption,
-                    onPressedDateOption: widget.onPressedDateOption,
-                    onChangePaymentType: widget.onChangePaymentType,
-                    onTapPaymentType: widget.onTapPaymentType,
-                    onChangeTransactionType: widget.onChangeTransactionType,
-                    onTapTransactionType: widget.onTapTransactionType,
-                    onChangeDate: widget.onChangeDate,
-                  ),
+        child:  */
+          SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(top: paddingTop),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: BillForm(
+                  bill: widget.bill,
+                  billResponse: widget.billResponse,
+                  rncController: widget.rncController,
+                  ncfController: widget.ncfController,
+                  grossTotalController: widget.grossTotalController,
+                  itbisController: widget.itbisController,
+                  date: widget.bill?.date,
+                  transactionType: widget.bill?.transactionType,
+                  paymentType: widget.bill?.paymentType,
+                  onPressedRncOption: widget.onPressedRncOption,
+                  onPressedNcfOption: widget.onPressedNcfOption,
+                  onPressedGrossTotalOption: widget.onPressedGrossTotalOption,
+                  onPressedItbisOption: widget.onPressedItbisOption,
+                  onPressedDateOption: widget.onPressedDateOption,
+                  onChangePaymentType: widget.onChangePaymentType,
+                  onTapPaymentType: widget.onTapPaymentType,
+                  onChangeTransactionType: widget.onChangeTransactionType,
+                  onTapTransactionType: widget.onTapTransactionType,
+                  onChangeDate: widget.onChangeDate,
                 ),
-              ],
-            ),
-          )),
+              ),
+            ],
+          ),
         ),
       ),
+      /* ), */
     );
   }
 

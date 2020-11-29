@@ -20,10 +20,10 @@ class AppTheme extends Equatable {
     final textTheme = (isDark
         ? ThemeData.dark().textTheme.copyWith(
               bodyText1: TextStyle(
-                color: Colors.brown,
+                color: Colors.blueGrey,
               ),
               subtitle1: TextStyle(
-                color: Colors.brown,
+                color: Colors.blueGrey,
               ),
             )
         : ThemeData.light().textTheme);
@@ -47,35 +47,31 @@ class AppTheme extends Equatable {
     );
 
     final labelStyle = TextStyle(
-      color: Colors.brown,
+      color: colorPalette.accentColor,
     );
 
     final hintStyle = TextStyle(
-      color: Colors.brown,
+      color: colorPalette.accentColor,
     );
 
     final inputDecorationTheme = InputDecorationTheme(
-      focusColor: Colors.brown,
-      labelStyle: labelStyle,
-      hintStyle: hintStyle,
-      fillColor: Colors.brown,
-      border: OutlineInputBorder(
+        focusColor: colorPalette.accentColor,
+        labelStyle: labelStyle,
+        hintStyle: hintStyle,
+        fillColor: colorPalette.accentColor,
+        border: InputBorder.none
+
+        /*  focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Colors.brown,
+          color: colorPalette.accentColor,
         ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.brown,
-        ),
-      ),
-    );
+      ), */
+        );
 
     final themeData =
         ThemeData.from(colorScheme: colorScheme, textTheme: textTheme).copyWith(
       buttonColor: colorPalette.accentColor,
       cursorColor: colorPalette.accentColor,
-      highlightColor: colorPalette.accentColor,
       toggleableActiveColor: colorPalette.accentColor,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: inputDecorationTheme,

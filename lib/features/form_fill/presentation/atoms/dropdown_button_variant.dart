@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_filler/core/presentation/atoms/neumorphic_container.dart';
 
 class DropdownButtonVariant<Type> extends StatelessWidget {
   const DropdownButtonVariant({
@@ -16,28 +17,25 @@ class DropdownButtonVariant<Type> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 15),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(
-          width: 1,
-          color: Colors.brown,
-          style: BorderStyle.solid,
-        ),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<Type>(
-          items: items,
-          value: value,
-          onChanged: onChanged,
-          isExpanded: true,
-          hint: DefaultTextStyle(
-            style: TextStyle(
-              color: Colors.brown,
-              fontSize: 16,
+    return NeumorphicContainer(
+      primaryColor: Theme.of(context).accentColor,
+      child: Container(
+        padding: EdgeInsets.only(top: 6, bottom: 6, left: 12, right: 15),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<Type>(
+            items: items,
+            value: value,
+            onChanged: onChanged,
+            dropdownColor: Theme.of(context).accentColor.withOpacity(.9),
+            isExpanded: true,
+            hint: DefaultTextStyle(
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              child: hint,
             ),
-            child: hint,
           ),
         ),
       ),

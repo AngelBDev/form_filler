@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:form_filler/core/presentation/atoms/primary_button_label.dart';
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/form_606_variant.dart';
@@ -25,7 +26,7 @@ class FormFillTemplate extends StatelessWidget {
   final TextEditingController clientRNCController;
   final void Function() onTapAddBill;
   final void Function(Bill value, int index) onTapBillRemove;
-  final void Function(Bill value) onTapBillField;
+  final void Function(Bill value, int index) onTapBillField;
   final void Function(BuildContext context) onSubmit;
   final void Function(DateTime date) onChangePeriodDate;
 
@@ -41,17 +42,14 @@ class FormFillTemplate extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final canSubmit = bills.isNotEmpty &&
+    /*   final canSubmit = bills.isNotEmpty &&
         periodDate.toString().trim().isNotEmpty &&
-        clientRNCController.text.trim().isNotEmpty;
+        clientRNCController.text.trim().isNotEmpty; */
 
     return AppBar(
       elevation: 0,
-      title: Text(
-        'DGII 606 Formulario',
-        style: TextStyle(
-          color: Colors.brown,
-        ),
+      title: PrimaryButtonLabel(
+        text: 'DGII 606 Formulario',
       ),
       actions: [
         Builder(
@@ -59,8 +57,8 @@ class FormFillTemplate extends StatelessWidget {
             icon: Icon(
               Icons.check,
             ),
-            color: Colors.green,
-            disabledColor: Colors.grey,
+            color: Theme.of(context).accentColor,
+            disabledColor: Colors.grey.withOpacity(.4),
             onPressed: /* canSubmit ? */ () => onSubmit(context) /* : null */,
           ),
         ),

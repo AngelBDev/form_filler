@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_filler/core/presentation/atoms/neumorphic_container.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatelessWidget {
@@ -36,26 +37,30 @@ class DatePicker extends StatelessWidget {
     final _dateSelected =
         dateSelected == null ? 'Date' : DateFormat.yMMMd().format(dateSelected);
     return InkWell(
-      onTap: () {
-        _selectDate(context);
-      },
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: labelText,
-          enabled: true,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Text(
-              _dateSelected,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Icon(
-              Icons.arrow_drop_down,
-            ),
-          ],
+      onTap: () => _selectDate(context),
+      child: NeumorphicContainer(
+        primaryColor: Theme.of(context).accentColor,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Text(
+                _dateSelected,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              Icon(
+                Icons.arrow_drop_down,
+                color: Colors.white.withOpacity(.6),
+              ),
+            ],
+          ),
         ),
       ),
     );

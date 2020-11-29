@@ -10,8 +10,9 @@ part 'form_606_state.dart';
 
 class Form606Cubit extends Cubit<Form606State> {
   Form606Cubit({
-    @required this.form606Repository,
-  }) : super(
+    @required Form606Repository form606Repository,
+  })  : _form606Repository = form606Repository,
+        super(
           Form606Initial(
             errors: null,
             loading: false,
@@ -19,7 +20,7 @@ class Form606Cubit extends Cubit<Form606State> {
           ),
         );
 
-  final Form606Repository form606Repository;
+  final Form606Repository _form606Repository;
 
   void submitForm({@required Form606 form}) async {
     Form606Initial _state = state;
@@ -39,9 +40,9 @@ class Form606Cubit extends Cubit<Form606State> {
   }
 
   Future<void> _submitForm({@required Form606 form}) async {
-    final codeName = await form606Repository.submit(form: form);
+    final codeName = await _form606Repository.submit(form: form);
 
-    await form606Repository.downloadFormFile(
+    await _form606Repository.downloadFormFile(
       codename: codeName,
       downloadPath: await _getDownloadPath(),
       onReceiveProgress: _onReceiveProgress,

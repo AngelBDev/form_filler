@@ -241,7 +241,7 @@ class BillForm extends StatelessWidget {
             child: Text(
               '${entry.value}',
               style: TextStyle(
-                color: Colors.green,
+                color: Colors.white,
               ),
             ),
           ),
@@ -263,20 +263,25 @@ class BillForm extends StatelessWidget {
           child: child,
         );
       },
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          for (final option in options)
-            InputChip(
-              selected: selected,
-              onPressed: () => onPressed(option.value),
-              padding: EdgeInsets.all(5),
-              label: Text(
-                option.label,
+      child: options.isNotEmpty
+          ? Container(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (final option in options)
+                    InputChip(
+                      selected: selected,
+                      onPressed: () => onPressed(option.value),
+                      padding: EdgeInsets.all(5),
+                      label: Text(
+                        option.label,
+                      ),
+                    ),
+                ],
               ),
-            ),
-        ],
-      ),
+            )
+          : Container(),
     );
   }
 }

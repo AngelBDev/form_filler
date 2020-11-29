@@ -7,11 +7,17 @@ import 'package:equatable/equatable.dart';
 import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/repositories/bill_repository.dart';
 import 'package:form_filler/features/form_fill/state/bill_state/bill_exception.dart';
+import 'package:meta/meta.dart';
 
 part 'bill_state.dart';
 
 class BillCubit extends Cubit<BillState> {
-  BillCubit(this._billRepository) : super(BillInitial());
+  BillCubit({@required BillRepository billRepository})
+      : _billRepository = billRepository,
+        super(
+          BillInitial(),
+        );
+
   final BillRepository _billRepository;
 
   Future<BillResponse> scanBill(File image) async {
@@ -64,15 +70,24 @@ class BillCubit extends Cubit<BillState> {
   }
 
   void _handleScanBillErrors(DioError error) {
-    BillInitial _state = state;
     if (error is NoImageToScanException) {
-      _state = _state.copyWith(errors: BillErrors.null_image);
-      emit(_state);
+      _emitError(BillErrors.null_image);
     }
 
+    // TODO: IMPLEMENT ERROR WHEN INFO IS NOT ENOUGH
+
+    /*   if (error is NotEnoughinfo) {
+     _emitError(BillErrors.not_enough_info);
+    } */
+
     if (error.response.statusCode != 200) {
-      _state = _state.copyWith(errors: BillErrors.server_error);
-      emit(_state);
+      _emitError(BillErrors.server_error);
     }
+  }
+
+  void _emitError(BillErrors error) {
+    BillInitial _state = state;
+    _state = _state.copyWith(errors: error);
+    emit(_state);
   }
 }

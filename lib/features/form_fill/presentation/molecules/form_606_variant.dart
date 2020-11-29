@@ -5,6 +5,7 @@ import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/added_field.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/date_picker.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/text_field_variant.dart';
+import 'package:intl/intl.dart';
 
 class Form606Variant extends StatelessWidget {
   const Form606Variant({
@@ -26,9 +27,9 @@ class Form606Variant extends StatelessWidget {
   final TextEditingController clientRNCController;
 
   final void Function() onTapAddBill;
-  final void Function(Bill value) onTapBillField;
+  final void Function(Bill value, int index) onTapBillField;
   final void Function(Bill value, int index) onTapBillRemove;
-  final void Function(DateTime) onChangePeriodDate;
+  final void Function(DateTime date) onChangePeriodDate;
 
   @override
   Widget build(BuildContext context) {
@@ -58,21 +59,27 @@ class Form606Variant extends StatelessWidget {
 
   List<Widget> _buildBillFields(BuildContext context) {
     return bills
+        .asMap()
         .map(
-          (bill) => AddedField(
-            width: double.infinity,
-            onTapField: () => onTapBillField(bill),
-            onTapRemove: () => onTapBillRemove(bill, 0),
-            hint: Text(
-              'Bill 1: ${bill.rnc}',
-              style: TextStyle(
-                color: Colors.brown,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          (index, bill) {
+            final widget = AddedField(
+              key: Key('${bill.date}${bill.rnc}${bill.grossTotal}}'),
+              onTapField: () => onTapBillField(bill, index),
+              onTapRemove: () => onTapBillRemove(bill, index),
+              title: Text(
+                'Bill ${index + 1}: ${bill.rnc} ${DateFormat.yMd().format(bill.date)}',
+                style: TextStyle(
+                  color: Colors.brown,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ),
+            );
+
+            return MapEntry(index, widget);
+          },
         )
+        .values
         .toList();
   }
 }

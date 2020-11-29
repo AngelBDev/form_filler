@@ -2,11 +2,11 @@ import 'package:equatable/equatable.dart';
 
 class BillResponse extends Equatable {
   BillResponse({
-    this.grossTotal,
-    this.itbis,
-    this.rnc,
-    this.ncf,
-    this.date,
+    this.grossTotal = const [],
+    this.itbis = const [],
+    this.rnc = const [],
+    this.ncf = const [],
+    this.date = const [],
   });
 
   final List<String> ncf;

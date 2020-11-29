@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/features/camera/presentation/atoms/image_display.dart';
+import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ScanBillTemplate extends StatelessWidget {
@@ -10,19 +12,19 @@ class ScanBillTemplate extends StatelessWidget {
     @required this.saveBill,
     @required this.scanBill,
     @required this.getImage,
+    @required this.stateListener,
     this.image,
   }) : super(key: key);
 
   final File image;
 
-  // TODO: IMPLEMENT SAVE BILL
   final void Function() saveBill;
 
-  // TODO: IMPLEMENT SCAN BILL
   final void Function(File) scanBill;
 
-  // TODO: IMPLEMENT GET IMAGE FROM GALLERY AND CAMERA
   final void Function(ImageSource) getImage;
+
+  final void Function(BuildContext, BillState) stateListener;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +48,16 @@ class ScanBillTemplate extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          ImageDisplay(),
-        ],
+    return Builder(
+      builder: (context) => BlocListener<BillCubit, BillState>(
+        listener: stateListener,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ImageDisplay(image: image),
+            ],
+          ),
+        ),
       ),
     );
   }

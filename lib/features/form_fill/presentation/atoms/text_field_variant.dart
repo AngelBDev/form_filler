@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_filler/core/presentation/atoms/neumorphic_container.dart';
 
 class TextFieldVariant extends StatelessWidget {
   const TextFieldVariant(
@@ -11,12 +12,26 @@ class TextFieldVariant extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: hintText,
-        border: OutlineInputBorder(),
+    return NeumorphicContainer(
+      primaryColor: Theme.of(context).accentColor,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+        child: TextField(
+          cursorColor: Colors.white,
+          controller: controller,
+          keyboardType: keyboardType,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
+          ),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
