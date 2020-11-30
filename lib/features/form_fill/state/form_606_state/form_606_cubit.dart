@@ -25,6 +25,7 @@ class Form606Cubit extends Cubit<Form606State> {
   void submitForm({@required Form606 form}) async {
    
     emit(_state);
+  
     await _trySubmitForm(form: form);
     _state = _state.copyWith(loading: false);
     emit(_state);
@@ -83,13 +84,13 @@ class Form606Cubit extends Cubit<Form606State> {
     }
   }
 
-  void _emitLoadingState(bool loading) {
+  void _emitLoading(bool loading) {
      Form606Initial _state = state;
     _state = _state.copyWith(loading: loading);
   }
 }
 
-final initialDownloadState = DownloadState(
+final initialDownloadState = DownloadState(git 
   downloading: false,
   progress: 0,
   total: 0,
