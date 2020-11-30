@@ -16,15 +16,15 @@ class BillResponse extends Equatable {
   final List<num> itbis;
 
   BillResponse.fromMap(Map<String, dynamic> map)
-      : date = (map['fecha'] as List<String>)
+      : date = List<String>.from(map['fecha'])
             .map(
               (rawDate) => DateTime.parse(rawDate),
             )
             .toList(),
-        grossTotal = map['totales'],
-        itbis = map['totales'],
-        ncf = map['NCF'],
-        rnc = map['RNC'];
+        grossTotal = List<num>.from(map['totales']),
+        itbis = List<num>.from(map['totales']),
+        ncf = List<String>.from(map['NCF']),
+        rnc = List<String>.from(map['RNC']);
 
   @override
   List<Object> get props => [

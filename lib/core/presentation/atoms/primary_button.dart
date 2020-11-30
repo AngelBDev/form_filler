@@ -47,7 +47,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       onPointerUp: _onPointerUp,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.bevel * 5),
           gradient: LinearGradient(

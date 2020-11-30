@@ -25,7 +25,7 @@ Color _getColor(SnackBarType type) {
 
   if (type == SnackBarType.success) return Colors.green;
 
-  if (type == SnackBarType.warning) return Colors.yellow[600];
+  if (type == SnackBarType.warning) return Colors.orange[600];
 
   return Colors.grey;
 }

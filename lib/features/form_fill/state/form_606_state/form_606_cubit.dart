@@ -66,9 +66,9 @@ class Form606Cubit extends Cubit<Form606State> {
     return;
   }
 
-  void _handleSubmitFormErrors(DioError error) {
+  void _handleSubmitFormErrors(DioError exception) {
     _emitInitialState();
-    if (error?.response?.statusCode != 200) {
+    if (exception?.response?.statusCode != 200) {
       _emitError(FormErrors.server_error);
     }
   }

@@ -1,17 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+
 import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
+
 import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/bill_form.dart';
-import 'package:form_filler/features/form_fill/presentation/pages/scan_bill_screen.dart';
-import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 
 class BillFormTemplate extends StatefulWidget {
   const BillFormTemplate({
     Key key,
-    this.image,
     @required this.bill,
     @required this.billResponse,
     @required this.rncController,
@@ -29,10 +26,9 @@ class BillFormTemplate extends StatefulWidget {
     @required this.onChangeTransactionType,
     @required this.onChangeDate,
     @required this.onSubmit,
-    @required this.scanImage,
+    @required this.navigateAndScanBill,
   }) : super(key: key);
 
-  final File image;
   final Bill bill;
   final BillResponse billResponse;
   final TextEditingController rncController;
@@ -50,7 +46,7 @@ class BillFormTemplate extends StatefulWidget {
   final void Function() onTapTransactionType;
   final void Function(DateTime date) onChangeDate;
   final void Function(Bill bill) onSubmit;
-  final void Function(File image) scanImage;
+  final void Function() navigateAndScanBill;
 
   @override
   _BillFormTemplateState createState() => _BillFormTemplateState();
@@ -75,14 +71,10 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
       title: Text('Formulario de factura'),
       elevation: 0,
       actions: [
-        if (/* isFormFilled */ true)
-          IconButton(
-            icon: Icon(
-              Icons.check,
-              color: Colors.green,
-            ),
-            onPressed: () => widget.onSubmit(widget.bill),
-          ),
+        IconButton(
+          icon: Icon(Icons.check, color: Colors.black),
+          onPressed: isFormFilled ? () => widget.onSubmit(widget.bill) : null,
+        ),
       ],
     );
   }
@@ -139,41 +131,11 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
     );
   }
 
-  void _listener(BuildContext context, BillState state) {
-    BillInitial _state = state;
-
-    _listenToEmptyImageError(context, _state);
-  }
-
-  void _listenToEmptyImageError(
-    context,
-    BillInitial state,
-  ) {
-    if (state.errors == BillErrors.null_image) {
-      _showSnackBar(context, 'No has seleccionado ninguna image', true);
-    }
-  }
-
-  void _showSnackBar(context, String message, [bool isError = false]) {
-    final color = isError ? Theme.of(context).errorColor : Colors.green;
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: color,
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
   FloatingActionButton _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
-      onPressed: _navigateToScanBill,
+      onPressed: widget.navigateAndScanBill,
       tooltip: 'Seleccionar imagen',
       child: Icon(Icons.add_a_photo),
-    );
-  }
-
-  void _navigateToScanBill() {
-    Navigator.of(context).pushNamed(
-      ScanBillScreen.route,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:form_filler/features/camera/presentation/pages/scan_bill_screen.dart';
 import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/templates/bill_form_template.dart';
@@ -18,8 +19,8 @@ class _BillFormScreenState extends State<BillFormScreen> {
   final TextEditingController _grossTotalController = TextEditingController();
   final TextEditingController _itbisController = TextEditingController();
 
+  var _billResponse = BillResponse();
   Bill _bill;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -49,6 +50,44 @@ class _BillFormScreenState extends State<BillFormScreen> {
     _itbisController?.dispose();
 
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BillFormTemplate(
+      bill: _bill,
+      billResponse: _billResponse,
+      navigateAndScanBill: () => navigateAndScanImage(context),
+      rncController: _rncController,
+      ncfController: _ncfController,
+      grossTotalController: _grossTotalController,
+      itbisController: _itbisController,
+      onPressedRncOption: _onPressedRncOption,
+      onPressedNcfOption: _onPressedNcfOption,
+      onPressedGrossTotalOption: _onPressedGrossTotalOption,
+      onPressedItbisOption: _onPressedItbisOption,
+      onPressedDateOption: _onPressedDateOption,
+      onChangePaymentType: _onChangePaymentType,
+      onTapPaymentType: _onTapPaymentType,
+      onChangeTransactionType: _onChangeTransactionType,
+      onTapTransactionType: _onTapTransactionType,
+      onChangeDate: _onChangeDate,
+      onSubmit: _onSubmit,
+    );
+  }
+
+  void navigateAndScanImage(BuildContext context) async {
+    final response = await Navigator.of(context).pushNamed(
+      ScanBillScreen.route,
+    );
+
+    BillResponse billResponse = response;
+
+    if (billResponse == null) return;
+
+    setState(() {
+      _billResponse = billResponse;
+    });
   }
 
   void _onChangeTransactionType(int value) {
@@ -126,36 +165,6 @@ class _BillFormScreenState extends State<BillFormScreen> {
     setState(() {
       _bill = _bill.copyWith(date: value);
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    /*    return BlocBuilder<BillCubit, BillState>(
-      builder: (context, state) {
-        BillInitial _state = state; */
-
-    return BillFormTemplate(
-      bill: _bill,
-      /*     billResponse: _state.bill, */
-      billResponse: BillResponse(),
-      rncController: _rncController,
-      ncfController: _ncfController,
-      grossTotalController: _grossTotalController,
-      itbisController: _itbisController,
-      onPressedRncOption: _onPressedRncOption,
-      onPressedNcfOption: _onPressedNcfOption,
-      onPressedGrossTotalOption: _onPressedGrossTotalOption,
-      onPressedItbisOption: _onPressedItbisOption,
-      onPressedDateOption: _onPressedDateOption,
-      onChangePaymentType: _onChangePaymentType,
-      onTapPaymentType: _onTapPaymentType,
-      onChangeTransactionType: _onChangeTransactionType,
-      onTapTransactionType: _onTapTransactionType,
-      onChangeDate: _onChangeDate,
-      onSubmit: _onSubmit,
-    );
-    /*  },
-    ); */
   }
 }
 

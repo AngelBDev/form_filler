@@ -270,12 +270,16 @@ class BillForm extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 children: [
                   for (final option in options)
-                    InputChip(
-                      selected: selected,
-                      onPressed: () => onPressed(option.value),
-                      padding: EdgeInsets.all(5),
-                      label: Text(
-                        option.label,
+                    Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: InputChip(
+                        backgroundColor: Colors.brown.withOpacity(.7),
+                        selected: selected,
+                        onPressed: () => onPressed(option.value),
+                        padding: EdgeInsets.all(5),
+                        label: Text(
+                          option.label,
+                        ),
                       ),
                     ),
                 ],

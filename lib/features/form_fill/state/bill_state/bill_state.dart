@@ -21,17 +21,19 @@ class BillInitial extends BillState {
   }) {
     return BillInitial(
       bill: bill ?? this.bill,
-      errors: errors ?? this.errors,
+      errors: errors == BillErrors.no_error ? null : errors ?? this.errors,
       loading: loading ?? this.loading,
     );
   }
 
   @override
-  List<Object> get props => [bill, errors];
+  List<Object> get props => [bill, errors, loading];
 }
 
 enum BillErrors {
   null_image,
   server_error,
   not_enough_info,
+  too_large_to_upload,
+  no_error,
 }

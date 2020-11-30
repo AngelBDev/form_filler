@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showSnackBar(context, Widget snackBar) {
+void showSnackBar(BuildContext context, Widget snackBar) {
   Scaffold.of(context).showSnackBar(
     snackBar,
   );

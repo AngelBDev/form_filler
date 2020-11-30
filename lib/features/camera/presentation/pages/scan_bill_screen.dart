@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_filler/core/helpers/_helpers.dart';
 import 'package:form_filler/core/presentation/atoms/defult_snack_bar.dart';
 import 'package:form_filler/features/camera/presentation/templates/scan_bill_template.dart';
-import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
+
 import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -20,26 +20,7 @@ class ScanBillScreen extends StatefulWidget {
 class _ScanBillScreenState extends State<ScanBillScreen> {
   final _picker = ImagePicker();
 
-  BillResponse _billResponse;
   File _image;
-
-  void _saveBill() {
-    Navigator.of(context).pop(_billResponse);
-  }
-
-  void _getImage(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: source);
-
-    setState(() => _image = File(pickedFile.path));
-  }
-
-  void _scanBill(File image) async {
-    final response = await BlocProvider.of<BillCubit>(context).scanBill(image);
-
-    setState(() {
-      _billResponse = response;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +28,24 @@ class _ScanBillScreenState extends State<ScanBillScreen> {
       image: _image,
       scanBill: _scanBill,
       getImage: _getImage,
-      saveBill: _saveBill,
       stateListener: _stateListener,
     );
+  }
+
+  void _scanBill(File image) async {
+    final response = await BlocProvider.of<BillCubit>(context).scanBill(image);
+
+    if (response != null) {
+      Navigator.of(context).pop(response);
+    }
+  }
+
+  void _getImage(ImageSource source) async {
+    final pickedFile = await _picker.getImage(source: source);
+
+    if (pickedFile == null) return;
+
+    setState(() => _image = File(pickedFile.path));
   }
 
   void _stateListener(context, state) {
@@ -66,6 +62,17 @@ class _ScanBillScreenState extends State<ScanBillScreen> {
       );
     }
 
+    if (_state.errors == BillErrors.too_large_to_upload) {
+      showSnackBar(
+        context,
+        defaultSnackBar(
+          message:
+              'La imagen es demasiado grande, trata con un archivo menos pesado',
+          type: SnackBarType.error,
+        ),
+      );
+    }
+
     if (_state.errors == BillErrors.null_image) {
       showSnackBar(
         context,
@@ -75,17 +82,5 @@ class _ScanBillScreenState extends State<ScanBillScreen> {
         ),
       );
     }
-
-    // TODO: implement NOT ENOUGH INFO MESSAGE
-
-    /*  if (_state.errors == BillErrors.not_enough_info) {
-      showSnackBar(
-        context,
-        defaultSnackBar(
-          message: 'No has seleccionado ninguna imagen para escanear.',
-          type: SnackBarType.warning,
-        ),
-      );
-    } */
   }
 }

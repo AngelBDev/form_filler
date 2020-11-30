@@ -23,8 +23,8 @@ class BillRepositoryImpl implements BillRepository {
         'data:image/jpeg;base64,$base64Image',
       ]
     };
-    final response = await dio.post<Map<String, dynamic>>(
-      env.apiUrl,
+    final response = await dio.post(
+      '${env.apiUrl}/ocr',
       data: body,
     );
     final Map<String, dynamic> data = response.data[0];
