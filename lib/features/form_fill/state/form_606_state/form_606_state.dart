@@ -24,7 +24,7 @@ class Form606Initial extends Form606State {
     DownloadState downloadState,
   }) {
     return Form606Initial(
-      errors: errors ?? this.errors,
+      errors: errors == FormErrors.no_error ? null : errors ?? this.errors,
       loading: loading ?? this.loading,
       downloadState: downloadState ?? this.downloadState,
     );
@@ -41,16 +41,16 @@ class DownloadState extends Equatable {
     @required this.downloading,
   });
 
-  final num progress;
-  final num total;
+  final int progress;
+  final int total;
   final bool downloading;
 
   @override
   List<Object> get props => [progress, total, downloading];
 
   DownloadState copyWith({
-    num progress,
-    num total,
+    int progress,
+    int total,
     bool downloading,
   }) {
     return DownloadState(
@@ -64,4 +64,5 @@ class DownloadState extends Equatable {
 enum FormErrors {
   server_error,
   dowload_error,
+  no_error,
 }

@@ -23,12 +23,9 @@ class Form606Cubit extends Cubit<Form606State> {
   final Form606Repository _form606Repository;
 
   void submitForm({@required Form606 form}) async {
-   
-    emit(_state);
-  
+    _emitInitialState();
+    _emitLoading(true);
     await _trySubmitForm(form: form);
-    _state = _state.copyWith(loading: false);
-    emit(_state);
   }
 
   Future<void> _trySubmitForm({@required Form606 form}) async {
@@ -45,16 +42,15 @@ class Form606Cubit extends Cubit<Form606State> {
   }
 
   Future _dowloadFile(String codeName) async {
-    
-
+    _emitLoading(false);
+    _emitDownload(downloading: true);
     await _form606Repository.downloadFormFile(
       codename: codeName,
       downloadPath: await _getDownloadPath(),
       onReceiveProgress: _onReceiveProgress,
     );
+    _emitInitialState();
   }
-
-  
 
   Future<String> _getDownloadPath() async {
     final downloadDirectory = await getExternalStorageDirectory();
@@ -62,35 +58,65 @@ class Form606Cubit extends Cubit<Form606State> {
     return path;
   }
 
-  void _onReceiveProgress(num received, num total) {
-    Form606Initial _state = state;
-    final num progressInPercentage = (received / total * 100).ceil();
-    final updatedDownloadState = _state.downloadState.copyWith(
-      progress: progressInPercentage,
-      total: total,
-      downloading: true,
-    );
-    _state = _state.copyWith(downloadState: updatedDownloadState);
-    emit(_state);
+  void _onReceiveProgress(int received, int total) {
+    final progressInPercentage = (received / total * 100).ceil();
+    final totalInPercentage = 100;
+    _emitDownload(progress: progressInPercentage, total: totalInPercentage);
+
     return;
   }
 
   void _handleSubmitFormErrors(DioError error) {
-    Form606Initial _state = state;
-
+    _emitInitialState();
     if (error?.response?.statusCode != 200) {
-      _state = _state.copyWith(errors: FormErrors.server_error);
-      emit(_state);
+      _emitError(FormErrors.server_error);
     }
   }
 
+  void _emitInitialState() {
+    Form606Initial _state = state;
+    final _downloadState = DownloadState(
+      downloading: false,
+      progress: 0,
+      total: 0,
+    );
+    final updatedState = _state.copyWith(
+      loading: false,
+      errors: FormErrors.no_error,
+      downloadState: _downloadState,
+    );
+    emit(updatedState);
+  }
+
   void _emitLoading(bool loading) {
-     Form606Initial _state = state;
-    _state = _state.copyWith(loading: loading);
+    Form606Initial _state = state;
+    _state = _state.copyWith(
+      loading: loading,
+    );
+    emit(_state);
+  }
+
+  void _emitDownload({bool downloading, int progress, int total}) {
+    Form606Initial _state = state;
+    final _downloadState = _state.downloadState.copyWith(
+      downloading: downloading,
+      progress: progress,
+      total: total,
+    );
+    final updatedState = _state.copyWith(
+      downloadState: _downloadState,
+    );
+    emit(updatedState);
+  }
+
+  void _emitError(FormErrors errors) {
+    Form606Initial _state = state;
+    _state = _state.copyWith(errors: errors);
+    emit(_state);
   }
 }
 
-final initialDownloadState = DownloadState(git 
+final initialDownloadState = DownloadState(
   downloading: false,
   progress: 0,
   total: 0,

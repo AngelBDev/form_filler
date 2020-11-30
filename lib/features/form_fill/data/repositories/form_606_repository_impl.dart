@@ -22,13 +22,18 @@ class Form606RepositoryImpl implements Form606Repository {
     final body = form.toMap();
 
     final response = await dio.post<Map<String, dynamic>>(
-      'https://form-filler.loca.lt/excel/fill',
+      '${env.apiUrl}/excel/fill',
       data: body,
     );
 
-    _validate(response);
+    _validateForm(response);
 
     return response.data['codeName'];
+  }
+
+  void _validateForm(Response<dynamic> response) {
+    _checkStatusCode(response);
+    _checkCodeName(response);
   }
 
   @override
@@ -38,27 +43,41 @@ class Form606RepositoryImpl implements Form606Repository {
     @required void Function(int, int) onReceiveProgress,
   }) async {
     final name = 'Excel form - ${DateTime.now()}';
-    final url = 'https://form-filler.loca.lt/excel/file/$codename';
+    final url = '${env.apiUrl}/excel/file/$codename';
     final savePath = '$downloadPath/Documents/${name}.xls';
 
-    Response<Map<String, dynamic>> response = await dio.download(
+    final response = await dio.download(
       url,
       savePath,
       onReceiveProgress: onReceiveProgress,
     );
 
-    _validate(response);
+    _validateDownload(response);
   }
 
-  void _validate(Response<Map<String, dynamic>> response) {
-    if (response.statusCode != 200 || response.data['codeName'] == null) {
-      throw ServerError(
-        type: DioErrorType.DEFAULT,
-        response: response,
-        request: response.request,
-        error:
-            'Ha ocurrido un error inesperado creando su factura, por favor intentar mas tarde',
-      );
+  void _validateDownload(Response<dynamic> response) {
+    _checkStatusCode(response);
+  }
+
+  void _checkStatusCode(Response<dynamic> response) {
+    if (response.statusCode != 200) {
+      _throwServerError(response);
     }
+  }
+
+  void _checkCodeName(Response<dynamic> response) {
+    if (response.data['codeName'] == null) {
+      _throwServerError(response);
+    }
+  }
+
+  void _throwServerError(Response<dynamic> response) {
+    throw ServerError(
+      type: DioErrorType.DEFAULT,
+      response: response,
+      request: response.request,
+      error:
+          'Ha ocurrido un error inesperado creando su factura, por favor intentar mas tarde',
+    );
   }
 }

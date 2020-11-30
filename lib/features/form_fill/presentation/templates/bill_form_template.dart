@@ -5,6 +5,7 @@ import 'package:form_filler/core/presentation/hoc/focus_handler.dart';
 import 'package:form_filler/features/form_fill/data/models/bill_response.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/molecules/bill_form.dart';
+import 'package:form_filler/features/form_fill/presentation/pages/scan_bill_screen.dart';
 import 'package:form_filler/features/form_fill/state/bill_state/bill_cubit.dart';
 
 class BillFormTemplate extends StatefulWidget {
@@ -43,9 +44,9 @@ class BillFormTemplate extends StatefulWidget {
   final void Function(num) onPressedGrossTotalOption;
   final void Function(num) onPressedItbisOption;
   final void Function(DateTime) onPressedDateOption;
-  final void Function(int value) onChangePaymentType;
   final void Function() onTapPaymentType;
   final void Function(int value) onChangeTransactionType;
+  final void Function(int value) onChangePaymentType;
   final void Function() onTapTransactionType;
   final void Function(DateTime date) onChangeDate;
   final void Function(Bill bill) onSubmit;
@@ -102,11 +103,7 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
   ) {
     final paddingTop = MediaQuery.of(context).padding.top;
     return Builder(
-      builder: (context) =>
-          /*BlocListener<BillCubit, BillState>(
-        listener: _listener,
-        child:  */
-          SingleChildScrollView(
+      builder: (context) => SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(top: paddingTop),
           child: Column(
@@ -139,7 +136,6 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
           ),
         ),
       ),
-      /* ), */
     );
   }
 
@@ -169,9 +165,15 @@ class _BillFormTemplateState extends State<BillFormTemplate> {
 
   FloatingActionButton _buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
-      /*    onPressed: () => _getImage(ImageSource.camera), */
+      onPressed: _navigateToScanBill,
       tooltip: 'Seleccionar imagen',
       child: Icon(Icons.add_a_photo),
+    );
+  }
+
+  void _navigateToScanBill() {
+    Navigator.of(context).pushNamed(
+      ScanBillScreen.route,
     );
   }
 }

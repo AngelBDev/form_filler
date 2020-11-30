@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +23,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
 
   final List<Bill> _bills = [];
 
-  List<File> _images;
-
   @override
   void dispose() {
     _clientRNCController.dispose();
@@ -37,7 +33,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
   Widget build(BuildContext context) {
     return FormFillTemplate(
       bills: _bills,
-      images: _images,
       clientRNCController: _clientRNCController,
       periodDate: _periodDate,
       onChangePeriodDate: _onChangePeriodDate,
@@ -117,6 +112,25 @@ class _FormFillScreenState extends State<FormFillScreen> {
           ),
         );
       }
+
+      if (state.downloadState.progress == 100) {
+        showSnackBar(
+          context,
+          defaultSnackBar(
+            message: 'Se ha creado el archivo con exito',
+            type: SnackBarType.success,
+          ),
+        );
+        _resetState();
+      }
     }
+  }
+
+  void _resetState() {
+    setState(() {
+      _clientRNCController.clear();
+      _periodDate = DateTime.now();
+      _bills.clear();
+    });
   }
 }

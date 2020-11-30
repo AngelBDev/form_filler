@@ -92,8 +92,17 @@ class FormFillTemplate extends StatelessWidget {
   Widget _buildLoading(BuildContext context, Form606State state) {
     if (state is Form606Initial) {
       if (state.loading) {
-        return Center(
-          child: CircularProgressIndicator(),
+        return Container(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text('...Subiendo formulario')
+            ],
+          ),
         );
       } else {
         return _buildForm(context);
@@ -107,18 +116,17 @@ class FormFillTemplate extends StatelessWidget {
     if (state is Form606Initial) {
       if (state.downloadState.downloading) {
         final progress = state.downloadState.progress;
-        return Column(
-          children: [
-            Center(
-              child: CircularProgressIndicator(
-                value: progress,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              progress.toString(),
-            )
-          ],
+        return Container(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text('Descargando archivo: $progress%')
+            ],
+          ),
         );
       } else {
         return _buildForm(context);

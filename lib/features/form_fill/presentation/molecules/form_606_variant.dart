@@ -62,16 +62,21 @@ class Form606Variant extends StatelessWidget {
         .asMap()
         .map(
           (index, bill) {
-            final widget = AddedField(
-              key: Key('${bill.date}${bill.rnc}${bill.grossTotal}}'),
-              onTapField: () => onTapBillField(bill, index),
-              onTapRemove: () => onTapBillRemove(bill, index),
-              title: Text(
-                'Factura ${index + 1}: ${bill.rnc} ${DateFormat.yMd().format(bill.date)}',
-                style: TextStyle(
-                  color: Colors.brown,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            final widget = Container(
+              margin: EdgeInsets.only(
+                bottom: 10,
+              ),
+              child: AddedField(
+                key: Key('${bill.date}${bill.rnc}${bill.grossTotal}}'),
+                onTapField: () => onTapBillField(bill, index),
+                onTapRemove: () => onTapBillRemove(bill, index),
+                title: Text(
+                  'Factura ${index + 1}: ${bill.rnc} ${DateFormat.yMd().format(bill.date)}',
+                  style: TextStyle(
+                    color: Colors.brown,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             );
