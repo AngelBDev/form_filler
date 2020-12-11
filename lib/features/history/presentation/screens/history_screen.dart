@@ -27,10 +27,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void initMembers() async {
     _appPath = await path.getExternalStorageDirectory();
-    var _documentsPath = Directory('${_appPath.path}/Documents/');
-    _filesInPath = _documentsPath.listSync(
-      recursive: false,
-    );
+    if (Directory('${_appPath.path}/Documents/').existsSync()) {
+      var _documentsPath = Directory('${_appPath.path}/Documents/');
+      _filesInPath = _documentsPath.listSync(
+        recursive: false,
+      );
+    } else {
+      _filesInPath = [];
+    }
 
     if (mounted) {
       setState(() {

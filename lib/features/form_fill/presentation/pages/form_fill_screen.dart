@@ -105,7 +105,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
     if (formData == null) return;
 
     if (canSubmitForm) {
-      BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
+      //  BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
     }
   }
 
@@ -128,25 +128,31 @@ class _FormFillScreenState extends State<FormFillScreen> {
     return canSubmitForm;
   }
 
-  DateTime _cleanDateDay(Bill bill) {
-    final billMonthDate = bill.date.subtract(
-      Duration(
-        days: bill.date.day - 1,
-      ),
-    );
-    return billMonthDate;
-  }
-
   bool _checkIfPeriodGreaterOrEqualThanBillDates(List<Bill> bills) {
     var isPeriodGreaterOrEqualThanBillDates = bills.every(
       (bill) {
-        final billMonthDate = _cleanDateDay(bill);
-        final compareNumber = billMonthDate.compareTo(_periodDate);
+        final billMonthDate = _cleanDateDay(bill.date);
+        final periodMonthDate = _cleanDateDay(_periodDate);
+        final compareNumber = billMonthDate.compareTo(periodMonthDate);
         // zero is equal, plus number is after, minus number is before
         return compareNumber == 0;
       },
     );
     return isPeriodGreaterOrEqualThanBillDates;
+  }
+
+  DateTime _cleanDateDay(DateTime date) {
+    final billMonthDate = date.subtract(
+      Duration(
+        days: date.day - 1,
+        hours: date.hour,
+        minutes: date.minute,
+        seconds: date.second,
+        milliseconds: date.millisecond,
+        microseconds: date.microsecond,
+      ),
+    );
+    return billMonthDate;
   }
 
   void _warnPeriodError() {
