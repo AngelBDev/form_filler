@@ -43,7 +43,7 @@ class Form606Variant extends StatelessWidget {
             onChange: onChangePeriodDate,
             dateSelected: periodDate,
             labelText: 'Fecha',
-            maxYear: 2025,
+            maxYear: DateTime.now().year,
             minYear: 1950,
           ),
         ),

@@ -84,7 +84,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
   Future<Bill> _getBill([Bill billToEdit]) async {
     final bill = await Navigator.of(context).pushNamed(
       BillFormScreen.route,
-      arguments: BillFormScreenParams(bill: billToEdit),
+      arguments: BillFormScreenParams(
+        bill: billToEdit,
+      ),
     );
 
     return bill;
@@ -98,7 +100,63 @@ class _FormFillScreenState extends State<FormFillScreen> {
 
   void _onSubmit(BuildContext context) async {
     final formData = _getFormData();
-    BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
+    final canSubmitForm = _validateForm();
+
+    if (formData == null) return;
+
+    if (canSubmitForm) {
+      BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
+    }
+  }
+
+  bool _validateForm() {
+    var canSubmitForm = false;
+
+    if (_bills.isEmpty) return canSubmitForm;
+    if (_periodDate == null) return canSubmitForm;
+    if (_clientRNCController.text.trim().isEmpty) return canSubmitForm;
+
+    final isPeriodGreaterOrEqualThanBillDates =
+        _checkIfPeriodGreaterOrEqualThanBillDates(_bills);
+
+    if (isPeriodGreaterOrEqualThanBillDates) {
+      canSubmitForm = true;
+    } else {
+      _warnPeriodError();
+    }
+
+    return canSubmitForm;
+  }
+
+  DateTime _cleanDateDay(Bill bill) {
+    final billMonthDate = bill.date.subtract(
+      Duration(
+        days: bill.date.day - 1,
+      ),
+    );
+    return billMonthDate;
+  }
+
+  bool _checkIfPeriodGreaterOrEqualThanBillDates(List<Bill> bills) {
+    var isPeriodGreaterOrEqualThanBillDates = bills.every(
+      (bill) {
+        final billMonthDate = _cleanDateDay(bill);
+        final compareNumber = billMonthDate.compareTo(_periodDate);
+        // zero is equal, plus number is after, minus number is before
+        return compareNumber == 0;
+      },
+    );
+    return isPeriodGreaterOrEqualThanBillDates;
+  }
+
+  void _warnPeriodError() {
+    showSnackBar(
+      context,
+      defaultSnackBar(
+        type: SnackBarType.warning,
+        message: 'El periodo debe coincidir con las fechas de las facturas.',
+      ),
+    );
   }
 
   Form606 _getFormData() {

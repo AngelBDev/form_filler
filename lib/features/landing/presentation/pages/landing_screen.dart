@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_filler/features/form_fill/presentation/pages/form_fill_screen.dart';
+import 'package:form_filler/features/history/presentation/screens/history_screen.dart';
 import 'package:form_filler/features/landing/presentation/templates/landing_template.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -7,7 +8,7 @@ class LandingScreen extends StatelessWidget {
   const LandingScreen({Key key}) : super(key: key);
 
   void _navigateToHistoryScreen(BuildContext context) {
-    Navigator.of(context).pushNamed('history');
+    Navigator.of(context).pushNamed(HistoryScreen.route);
   }
 
   void _navigateToFillFormScreen(BuildContext context) {

@@ -24,7 +24,7 @@ class DatePicker extends StatelessWidget {
       context: context,
       initialDate: dateSelected ?? DateTime.now(),
       firstDate: DateTime(minYear),
-      lastDate: DateTime(maxYear),
+      lastDate: DateTime.now(),
     );
 
     if (picked != null && picked != dateSelected) {

@@ -40,9 +40,11 @@ class Form606RepositoryImpl implements Form606Repository {
   Future<void> downloadFormFile({
     @required String downloadPath,
     @required String codename,
+    @required String period,
     @required void Function(int, int) onReceiveProgress,
   }) async {
-    final name = 'Excel form - ${DateTime.now()}';
+    final name =
+        'Excel form - ${DateTime.now().toString()} .$codename .$period';
     final url = '${env.apiUrl}/excel/file/$codename';
     final savePath = '$downloadPath/Documents/${name}.xls';
 

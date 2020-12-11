@@ -190,7 +190,7 @@ class BillForm extends StatelessWidget {
           onChange: onChangeDate,
           dateSelected: date,
           labelText: 'Fecha',
-          maxYear: 2025,
+          maxYear: DateTime.now().year,
           minYear: 1950,
         ),
         SizedBox(

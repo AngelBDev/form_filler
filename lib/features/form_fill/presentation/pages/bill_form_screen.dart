@@ -234,7 +234,7 @@ class BillFormScreenParams extends Equatable {
   final Bill bill;
 
   BillFormScreenParams({
-    this.bill,
+    @required this.bill,
   });
 
   @override

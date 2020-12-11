@@ -28,6 +28,10 @@ class LandingBody extends StatelessWidget {
               child: PrimaryButtonLabel(text: 'Llenar Formulario'),
               onPressed: onPressPrimaryButton?.call,
             ),
+            secundaryButton: PrimaryButton(
+              child: PrimaryButtonLabel(text: 'Ver historial'),
+              onPressed: onPressSecundaryButton?.call,
+            ),
           ),
         ],
       ),

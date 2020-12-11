@@ -19,6 +19,7 @@ abstract class Form606Repository {
   Future<void> downloadFormFile({
     @required String downloadPath,
     @required String codename,
+    @required String period,
     @required void Function(int, int) onReceiveProgress,
   });
 }

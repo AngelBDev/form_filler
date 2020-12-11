@@ -38,15 +38,19 @@ class Form606Cubit extends Cubit<Form606State> {
 
   Future<void> _submitForm({@required Form606 form}) async {
     final codeName = await _form606Repository.submit(form: form);
-    await _dowloadFile(codeName);
+    await _dowloadFile(codeName, form.period.toString());
   }
 
-  Future _dowloadFile(String codeName) async {
+  Future _dowloadFile(
+    String codeName,
+    String period,
+  ) async {
     _emitLoading(false);
     _emitDownload(downloading: true);
     await _form606Repository.downloadFormFile(
       codename: codeName,
       downloadPath: await _getDownloadPath(),
+      period: period,
       onReceiveProgress: _onReceiveProgress,
     );
     _emitInitialState();
