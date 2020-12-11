@@ -15,7 +15,7 @@ class AddInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      overflow: Overflow.visible,
+      clipBehavior: Clip.hardEdge,
       children: [
         Container(
           padding: EdgeInsets.only(top: 12, bottom: 12, left: 12, right: 15),

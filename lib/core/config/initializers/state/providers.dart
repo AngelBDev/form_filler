@@ -54,7 +54,7 @@ class _InitialProvidersState extends State<InitialProviders> {
         BlocProvider<Form606Cubit>(
           create: (context) => Form606Cubit(
             form606Repository: Form606RepositoryImpl(
-              dio: Dio(),
+              dio: Dio(BaseOptions()),
               env: Enviroment(
                 env: DotEnv().env,
               ),

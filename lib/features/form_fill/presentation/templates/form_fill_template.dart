@@ -15,6 +15,7 @@ class FormFillTemplate extends StatelessWidget {
     @required this.periodDate,
     @required this.onTapAddBill,
     @required this.onTapBillField,
+    @required this.onChangeRncField,
     @required this.onTapBillRemove,
     @required this.onSubmit,
     @required this.onChangePeriodDate,
@@ -28,6 +29,7 @@ class FormFillTemplate extends StatelessWidget {
   final DateTime periodDate;
   final TextEditingController clientRNCController;
   final void Function() onTapAddBill;
+  final void Function(String value) onChangeRncField;
   final void Function(Bill value, int index) onTapBillRemove;
   final void Function(Bill value, int index) onTapBillField;
   final void Function(BuildContext context) onSubmit;
@@ -145,6 +147,7 @@ class FormFillTemplate extends StatelessWidget {
         periodDate: periodDate,
         images: images,
         onTapAddBill: onTapAddBill,
+        onChangeRncField: onChangeRncField,
         onTapBillRemove: onTapBillRemove,
         onTapBillField: onTapBillField,
         onChangePeriodDate: onChangePeriodDate,

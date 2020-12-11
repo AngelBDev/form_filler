@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:form_filler/features/form_fill/domain/entities/bill.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/added_field.dart';
-import 'package:form_filler/features/form_fill/presentation/atoms/date_picker.dart';
+import 'package:form_filler/features/form_fill/presentation/atoms/month_picker.dart';
 import 'package:form_filler/features/form_fill/presentation/atoms/text_field_variant.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +17,8 @@ class Form606Variant extends StatelessWidget {
     @required this.onTapBillField,
     @required this.onTapBillRemove,
     @required this.onChangePeriodDate,
-    this.onTapAddBill,
+    @required this.onTapAddBill,
+    @required this.onChangeRncField,
   }) : super(key: key);
 
   final List<File> images;
@@ -27,6 +28,7 @@ class Form606Variant extends StatelessWidget {
   final TextEditingController clientRNCController;
 
   final void Function() onTapAddBill;
+  final void Function(String value) onChangeRncField;
   final void Function(Bill value, int index) onTapBillField;
   final void Function(Bill value, int index) onTapBillRemove;
   final void Function(DateTime date) onChangePeriodDate;
@@ -37,7 +39,7 @@ class Form606Variant extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: 20),
-          child: DatePicker(
+          child: DateMonthPicker(
             onChange: onChangePeriodDate,
             dateSelected: periodDate,
             labelText: 'Fecha',
@@ -50,6 +52,7 @@ class Form606Variant extends StatelessWidget {
           child: TextFieldVariant(
             controller: clientRNCController,
             hintText: 'Cliente RNC',
+            onChanged: onChangeRncField,
           ),
         ),
         if (bills != null) ..._buildBillFields(context),

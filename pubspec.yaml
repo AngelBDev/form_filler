@@ -23,21 +23,51 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Icons
   cupertino_icons: ^0.1.3
+  
+  # Functional programming utilities
   dartz: ^0.9.2
+
+  # Http client
   dio: ^3.0.10
+
+  # Equality override for classes
   equatable: ^1.2.5
+
+  # State managment
   flutter_bloc: ^6.1.1
+
+  # Enviroment managment
   flutter_dotenv: ^2.1.0
+
+  # Dependency Injection
   get_it: ^5.0.1
-  hive: ^1.4.4+1
+
+  # Resource use
   image_picker: ^0.6.7+12
-  intl:  0.17.0-nullsafety.2
+
+  # Text/Date formating
+  intl: ^0.17.0-nullsafety.2
+
+  # Application path utilities
   path_provider: ^1.6.24
-  pedantic: ^1.9.2
+
+
+  # Permissions
   permission_handler: ^5.0.1+1
+
+  # Id generation
   uuid: ^2.2.2
+
+  ## Widgets
+
+  # Date Picker
   month_picker_dialog: ^0.3.3
+
+  # Linter and code rules
+  pedantic: ^1.9.2
 
 dev_dependencies:
   flutter_test:

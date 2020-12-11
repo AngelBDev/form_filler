@@ -5,7 +5,7 @@ import 'package:form_filler/core/config/initializers/dependencies/injection_cont
 import 'package:form_filler/core/config/params/init_app_params.dart';
 
 void initMain() async {
-  await DotEnv().load('.env');
+/*   await DotEnv().load('.env'); */
   await _service_locator.init();
 }
 

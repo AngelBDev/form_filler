@@ -27,14 +27,28 @@ class ScanBillTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      body: _buildBody(context),
-      floatingActionButton: _buildFloatingActionButton(),
+    return BlocBuilder<BillCubit, BillState>(
+      builder: (context, state) {
+        BillInitial _state = state;
+        return Scaffold(
+          appBar: _buildAppBar(
+            context,
+            !_state.loading,
+          ),
+          body: _buildStateHandledBody(
+            context,
+            state,
+          ),
+          floatingActionButton: _buildStateHandledFloatingActionButton(
+            context,
+            state,
+          ),
+        );
+      },
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, bool canPressScanBill) {
     return AppBar(
       elevation: 0,
       actions: [
@@ -42,55 +56,39 @@ class ScanBillTemplate extends StatelessWidget {
           icon: Icon(
             Icons.check,
           ),
-          onPressed: () => scanBill(image),
+          disabledColor: Colors.grey,
+          onPressed: canPressScanBill ? () => scanBill(image) : null,
         )
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return Builder(
-      builder: (context) => BlocConsumer<BillCubit, BillState>(
-        listener: stateListener,
-        builder: _builder,
+  Widget _buildStateHandledBody(BuildContext context, BillState state) {
+    BillInitial _state = state;
+
+    if (_state.loading) {
+      return _builBodydLoading(context, state);
+    }
+
+    return _buildBody(context);
+  }
+
+  Widget _builBodydLoading(BuildContext context, BillState state) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 10),
+          Text('...Escaneando foto')
+        ],
       ),
     );
   }
 
-  Widget _builder(BuildContext context, BillState state) {
-    if (state is BillInitial) {
-      if (state.loading) {
-        return _buildLoading(context, state);
-      }
-    }
-
-    return _buildForm(context);
-  }
-
-  Widget _buildLoading(BuildContext context, BillState state) {
-    if (state is BillInitial) {
-      if (state.loading) {
-        return Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 10),
-              Text('...Escaneando foto')
-            ],
-          ),
-        );
-      } else {
-        return _buildForm(context);
-      }
-    }
-
-    return _buildForm(context);
-  }
-
-  Widget _buildForm(BuildContext context) {
+  Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
@@ -143,6 +141,15 @@ class ScanBillTemplate extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _buildStateHandledFloatingActionButton(
+      BuildContext context, BillState state) {
+    BillInitial _state = state;
+
+    if (_state.loading) return null;
+
+    return _buildFloatingActionButton();
   }
 
   FloatingActionButton _buildFloatingActionButton() {

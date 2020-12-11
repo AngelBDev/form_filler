@@ -36,6 +36,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
       clientRNCController: _clientRNCController,
       periodDate: _periodDate,
       onChangePeriodDate: _onChangePeriodDate,
+      onChangeRncField: _onChangeRncField,
       onTapAddBill: _addNewBill,
       onTapBillField: _editBill,
       onTapBillRemove: _removeBill,
@@ -48,6 +49,16 @@ class _FormFillScreenState extends State<FormFillScreen> {
     setState(() {
       _periodDate = date;
     });
+  }
+
+  void _onChangeRncField(String value) {
+    final startedFilling = value.length == 1;
+
+    value = value.trim();
+
+    if (value.isEmpty || startedFilling) {
+      setState(() {});
+    }
   }
 
   void _addNewBill() async {
