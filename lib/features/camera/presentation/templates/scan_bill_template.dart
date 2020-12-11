@@ -27,7 +27,8 @@ class ScanBillTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BillCubit, BillState>(
+    return BlocConsumer<BillCubit, BillState>(
+      listener: stateListener,
       builder: (context, state) {
         BillInitial _state = state;
         return Scaffold(

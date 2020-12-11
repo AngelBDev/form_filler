@@ -34,4 +34,20 @@ class BillResponse extends Equatable {
         grossTotal,
         itbis,
       ];
+
+  BillResponse copyWith({
+    List<String> ncf,
+    List<String> rnc,
+    List<DateTime> date,
+    List<num> grossTotal,
+    List<num> itbis,
+  }) {
+    return BillResponse(
+      ncf: ncf ?? this.ncf,
+      rnc: rnc ?? this.rnc,
+      date: date ?? this.date,
+      grossTotal: grossTotal ?? this.grossTotal,
+      itbis: itbis ?? this.itbis,
+    );
+  }
 }

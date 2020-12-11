@@ -87,7 +87,69 @@ class _BillFormScreenState extends State<BillFormScreen> {
 
     setState(() {
       _billResponse = billResponse;
+      _updateParamsWithSingleResponse(billResponse);
+      _billResponse = _cleanSingleResponse(billResponse);
     });
+  }
+
+  void _updateParamsWithSingleResponse(BillResponse billResponse) {
+    if (billResponse?.rnc?.length == 1) {
+      _rncController.text = billResponse.rnc.first;
+    }
+
+    if (billResponse?.ncf?.length == 1) {
+      _ncfController.text = billResponse.ncf.first;
+    }
+
+    if (billResponse?.itbis?.length == 1) {
+      _itbisController.text = billResponse.itbis.first.toString();
+    }
+
+    if (billResponse?.grossTotal?.length == 1) {
+      _grossTotalController.text = billResponse.grossTotal.first.toString();
+    }
+
+    if (billResponse?.date?.length == 1) {
+      final updatedBill = _bill.copyWith(
+        date: billResponse.date.first,
+      );
+      _bill = updatedBill;
+    }
+  }
+
+  BillResponse _cleanSingleResponse(BillResponse billResponse) {
+    var updatedBillResponse = billResponse;
+    if (billResponse?.rnc?.length == 1) {
+      updatedBillResponse = updatedBillResponse.copyWith(
+        rnc: [],
+      );
+    }
+
+    if (billResponse?.ncf?.length == 1) {
+      updatedBillResponse = updatedBillResponse.copyWith(
+        ncf: [],
+      );
+    }
+
+    if (billResponse?.itbis?.length == 1) {
+      updatedBillResponse = updatedBillResponse.copyWith(
+        itbis: [],
+      );
+    }
+
+    if (billResponse?.grossTotal?.length == 1) {
+      updatedBillResponse = updatedBillResponse.copyWith(
+        grossTotal: [],
+      );
+    }
+
+    if (billResponse?.date?.length == 1) {
+      updatedBillResponse = updatedBillResponse.copyWith(
+        date: [],
+      );
+    }
+
+    return updatedBillResponse;
   }
 
   void _onChangeTransactionType(int value) {

@@ -26,7 +26,46 @@ class BillForm extends StatelessWidget {
     @required this.onChangePaymentType,
     @required this.onChangeDate,
     this.billResponse,
-  });
+  })  : rncOptions = billResponse.rnc
+            .map(
+              (option) => ResponseOptionItem(
+                label: option,
+                value: option,
+              ),
+            )
+            .toList(),
+        nfcOptions = billResponse.ncf
+            .map(
+              (option) => ResponseOptionItem(
+                label: option,
+                value: option,
+              ),
+            )
+            .toList(),
+        grossTotalOptions = billResponse.grossTotal
+            .map(
+              (option) => ResponseOptionItem(
+                label: '$option',
+                value: option,
+              ),
+            )
+            .toList(),
+        itbisOptions = billResponse.itbis
+            .map(
+              (option) => ResponseOptionItem(
+                label: '$option',
+                value: option,
+              ),
+            )
+            .toList(),
+        dateOptions = billResponse.date
+            .map(
+              (option) => ResponseOptionItem(
+                label: option.toString(),
+                value: option,
+              ),
+            )
+            .toList();
 
   final Bill bill;
   final BillResponse billResponse;
@@ -71,53 +110,18 @@ class BillForm extends StatelessWidget {
     7: '07 - MIXTO'
   };
 
+  final List<ResponseOptionItem> rncOptions;
+
+  final List<ResponseOptionItem> nfcOptions;
+
+  final List<ResponseOptionItem> grossTotalOptions;
+
+  final List<ResponseOptionItem> itbisOptions;
+
+  final List<ResponseOptionItem> dateOptions;
+
   @override
   Widget build(BuildContext context) {
-    final rncOptions = billResponse.rnc
-        .map(
-          (option) => ResponseOptionItem(
-            label: option,
-            value: option,
-          ),
-        )
-        .toList();
-
-    final nfcOptions = billResponse.ncf
-        .map(
-          (option) => ResponseOptionItem(
-            label: option,
-            value: option,
-          ),
-        )
-        .toList();
-
-    final grossTotalOptions = billResponse.grossTotal
-        .map(
-          (option) => ResponseOptionItem(
-            label: '$option',
-            value: option,
-          ),
-        )
-        .toList();
-
-    final itbisOptions = billResponse.itbis
-        .map(
-          (option) => ResponseOptionItem(
-            label: '$option',
-            value: option,
-          ),
-        )
-        .toList();
-
-    final dateOptions = billResponse.date
-        .map(
-          (option) => ResponseOptionItem(
-            label: option.toString(),
-            value: option,
-          ),
-        )
-        .toList();
-
     return Column(
       children: [
         TextFieldVariant(

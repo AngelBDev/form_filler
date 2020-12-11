@@ -39,15 +39,31 @@ class FormFillTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FocusHandler(
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: _buildBody(context),
-        floatingActionButton: _buildFloatingActionButton(context),
+      child: BlocConsumer<Form606Cubit, Form606State>(
+        listener: form606Listener,
+        builder: (context, state) {
+          final Form606Initial _state = state;
+
+          final canSubmitForm =
+              !_state.loading && !_state.downloadState.downloading;
+
+          return Scaffold(
+            appBar: _buildAppBar(
+              context,
+              canSubmitForm,
+            ),
+            body: _buildStateHandledBody(context, state),
+            floatingActionButton: _buildStateHandledFloatingActionButton(
+              context,
+              state,
+            ),
+          );
+        },
       ),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, bool canPressSubmitForm) {
     final canSubmit = _canSubmit();
 
     return AppBar(
@@ -70,75 +86,21 @@ class FormFillTemplate extends StatelessWidget {
     );
   }
 
+  Widget _buildStateHandledBody(BuildContext context, Form606State state) {
+    Form606Initial _state = state;
+
+    if (_state.loading) {
+      return _buildLoading(context);
+    }
+
+    if (_state.downloadState.downloading) {
+      return _buildDownloading(context, state);
+    }
+
+    return _buildBody(context);
+  }
+
   Widget _buildBody(BuildContext context) {
-    return BlocConsumer<Form606Cubit, Form606State>(
-      listener: form606Listener,
-      builder: _builder,
-    );
-  }
-
-  Widget _builder(BuildContext context, Form606State state) {
-    if (state is Form606Initial) {
-      if (state.loading) {
-        return _buildLoading(context, state);
-      }
-
-      if (state.downloadState.downloading) {
-        return _buildDownloading(context, state);
-      }
-    }
-
-    return _buildForm(context);
-  }
-
-  Widget _buildLoading(BuildContext context, Form606State state) {
-    if (state is Form606Initial) {
-      if (state.loading) {
-        return Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 10),
-              Text('...Subiendo formulario')
-            ],
-          ),
-        );
-      } else {
-        return _buildForm(context);
-      }
-    }
-
-    return _buildForm(context);
-  }
-
-  Widget _buildDownloading(BuildContext context, Form606State state) {
-    if (state is Form606Initial) {
-      if (state.downloadState.downloading) {
-        final progress = state.downloadState.progress;
-        return Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 10),
-              Text('Descargando archivo: $progress%')
-            ],
-          ),
-        );
-      } else {
-        return _buildForm(context);
-      }
-    }
-
-    return _buildForm(context);
-  }
-
-  Widget _buildForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Form606Variant(
@@ -153,6 +115,48 @@ class FormFillTemplate extends StatelessWidget {
         onChangePeriodDate: onChangePeriodDate,
       ),
     );
+  }
+
+  Widget _buildLoading(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 10),
+          Text('...Subiendo formulario')
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDownloading(BuildContext context, Form606State state) {
+    Form606Initial _state = state;
+
+    final progress = _state.downloadState.progress;
+    return Container(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 10),
+          Text('Descargando archivo: $progress%')
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStateHandledFloatingActionButton(
+      BuildContext context, Form606State state) {
+    Form606Initial _state = state;
+
+    if (_state.loading) return null;
+
+    return _buildFloatingActionButton(context);
   }
 
   FloatingActionButton _buildFloatingActionButton(BuildContext context) {
