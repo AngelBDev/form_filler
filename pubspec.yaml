@@ -32,11 +32,12 @@ dependencies:
   get_it: ^5.0.1
   hive: ^1.4.4+1
   image_picker: ^0.6.7+12
-  intl: ^0.16.1
+  intl:  0.17.0-nullsafety.2
   path_provider: ^1.6.24
   pedantic: ^1.9.2
   permission_handler: ^5.0.1+1
   uuid: ^2.2.2
+  month_picker_dialog: ^0.3.3
 
 dev_dependencies:
   flutter_test:
