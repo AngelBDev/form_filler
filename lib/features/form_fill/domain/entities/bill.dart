@@ -14,8 +14,8 @@ class Bill extends Equatable {
   final String ncf;
   final String rnc;
   final DateTime date;
-  final num grossTotal;
-  final num itbis;
+  final double grossTotal;
+  final double itbis;
   final int transactionType;
   final int paymentType;
 
@@ -23,8 +23,8 @@ class Bill extends Equatable {
     String ncf,
     String rnc,
     DateTime date,
-    num grossTotal,
-    num itbis,
+    double grossTotal,
+    double itbis,
     int transactionType,
     int paymentType,
   }) {

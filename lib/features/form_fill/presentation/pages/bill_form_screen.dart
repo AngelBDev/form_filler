@@ -183,8 +183,8 @@ class _BillFormScreenState extends State<BillFormScreen> {
   }
 
   Bill _addBillSubmitData(Bill bill) {
-    final itbis = int.tryParse(_itbisController.text);
-    final grossTotal = int.tryParse(_grossTotalController.text);
+    final itbis = double.tryParse(_itbisController.text);
+    final grossTotal = double.tryParse(_grossTotalController.text);
     final updatedBill = bill.copyWith(
       rnc: _rncController.text,
       ncf: _ncfController.text,

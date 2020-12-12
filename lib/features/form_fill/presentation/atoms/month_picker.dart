@@ -36,7 +36,7 @@ class DateMonthPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _dateSelected =
-        dateSelected == null ? 'Date' : DateFormat.yMMM().format(dateSelected);
+        dateSelected == null ? 'Fecha' : DateFormat.yMMM().format(dateSelected);
     return InkWell(
       onTap: () => _selectDate(context),
       child: NeumorphicContainer(

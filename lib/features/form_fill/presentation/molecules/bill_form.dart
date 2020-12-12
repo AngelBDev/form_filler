@@ -141,7 +141,7 @@ class BillForm extends StatelessWidget {
         ),
         TextFieldVariant(
           controller: ncfController,
-          hintText: 'NFC',
+          hintText: 'NCF',
         ),
         SizedBox(
           height: 10,

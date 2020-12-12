@@ -105,7 +105,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
     if (formData == null) return;
 
     if (canSubmitForm) {
-      //  BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
+      BlocProvider.of<Form606Cubit>(context).submitForm(form: formData);
     }
   }
 
